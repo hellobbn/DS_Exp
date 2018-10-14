@@ -4,31 +4,24 @@
  * operations.
 */
 
-#include <stdio.h>
 #include "main.h"
 
-/* Basic Definition of the data structure of a polynomial*/
-struct polyNode {
-    int coff;
-    int freq;
-    struct polyNode* next;
-};
+#include <stdio.h>
+#include <stdlib.h>
 
-/* Basic Definition of the data structure of a list*/
-struct polyList {
-    poly head;
-    struct polyList* next;
-};
 
 /* Function used in this file */
-int DoOperation(int num);
+pList InitList(void);
+int DoOperation(int, pList);
 
+/* Main function */
 int main(int argc, char const *argv[])
 {
 
     /* The choosing menu should run in a loop. */
     while(1) {
         /* Init the list */
+        pList polyList = InitList();
 
         /* Init the menu */
         printf("******** Simple Polynomial Calculator ********\n\n");
@@ -57,7 +50,59 @@ int main(int argc, char const *argv[])
         }
 
         /* Do the requested Operation */
-
+        DoOperation(choice, polyList);
     }
     return 0;
+}
+
+/* InitList(): generate a poly list 
+ * A head pointer is used.
+ */
+
+pList InitList(void) {
+    pList head = NewListNode();
+    pList p = NewListNode();
+    head->next = p;
+    return head;
+}
+
+int DoOperation(int num, pList head) {
+    
+    switch (num)
+    {
+        case 1:
+            /* Add new polys */
+            MakePoly(head);
+            break;
+        case 2:
+            /* Output all polys */
+            ShowList(head);
+            break;
+        case 3:
+            /* Add 2 polys */
+            DisAndCall(AddPoly, 2, head);
+            break;
+        case 4:
+            /* Sub 2 polys */
+            DisAndCall(SubPoly, 2, head);
+            break;
+        case 5:
+            /* Solve One poly */
+            DisAndCall(SolvePoly, 1, head);
+            break;
+        case 6:
+            /* Del One poly */
+            DelPoly(head);
+            break;
+        case 7:
+            /* Make one poly empty */
+            DisAndCall(EmptyPoly, 1, head);
+            break;
+        case 8:
+            /* Make changes to a poly */
+            ChangePoly(head);
+            break;
+        default:
+            break;
+    }
 }
