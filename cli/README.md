@@ -46,25 +46,28 @@
 2. Show Poly uses `ShowElement()` to revise and output each element.
 
 - Function 3: `AddPoly()`
-
-1. Sort them out and add them together.
-2. Generate a new poly and asks if you want to save it.
-3. If true, just append it to the list.
-4. If false, free it and let it go.
+1. through `DisAndCall()` type 2
+2. Sort them out and add them together.
+3. Generate a new poly and asks if you want to save it.
+4. If true, just append it to the list.
+5. If false, free it and let it go.
 
 - Function 4: `SubPoly()`
-1. Almost the same as `AddPoly()`
+1. through `DisAndCall()` type 2
+2. Almost the same as `AddPoly()`
 
 - Function 5: `SolvePoly()`
-1. Need a number to solve
-2. Use `sum` var and calculate each node.
+1. Through `DisAndCall()` type 1
+2. Need a number to solve
+3. Use `sum` var and calculate each node.
 
 - Function 6: `DelPoly()`
 1. `ShowList()`, ask which to del
 2. del it
 
 - Function 7: `EmptyPoly()`
-1. The same as Function 6
+1. through `DisAndCall()` type 1
+2. The same as Function 6
 
 - Function 8: `ChangePoly()`
 1. `ShowList()`, ask which to change
@@ -80,6 +83,11 @@
     Change Node: `ChNode()`
         1. Call `FindNode()` to find the node
         2. Change it.
+
+- Additional Note:
+1. I'm using a universal function to implement some options: `DisAndCall()`
+2. It uses a function pointer and at first, it will use `ShowList()` to display all lists and let the user choose the poly(s) to operate on
+3. The `type` parameter in the `DisAndCall()` indicates how many input is required by the function pointer.
 
 ## Function Summery
 
