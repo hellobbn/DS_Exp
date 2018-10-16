@@ -25,7 +25,9 @@
 6. 多项式的四则运算（如 “(1+2*3)/4”）
 7. 计算器的仿真界面
 
-## 预计设计
+## Short Design Notes
+
+Note: refer to Documentation for a complete note.
 
 - Init:
 
