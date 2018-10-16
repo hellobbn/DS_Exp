@@ -60,10 +60,7 @@ int main(int argc, char const *argv[])
  */
 
 pList InitList(void) {
-    pList head = NewListNode();
-    pList p = NewListNode();
-    head->next = p;
-    return head;
+    return NewListNode();
 }
 
 int DoOperation(int num, pList head) {
@@ -74,35 +71,36 @@ int DoOperation(int num, pList head) {
             /* Add new polys */
             MakePoly(head);
             break;
-        case 2:
-            /* Output all polys */
-            ShowList(head);
-            break;
-        case 3:
-            /* Add 2 polys */
-            DisAndCall(AddPoly, 2, head);
-            break;
-        case 4:
-            /* Sub 2 polys */
-            DisAndCall(SubPoly, 2, head);
-            break;
-        case 5:
-            /* Solve One poly */
-            DisAndCall(SolvePoly, 1, head);
-            break;
-        case 6:
-            /* Del One poly */
-            DelPoly(head);
-            break;
-        case 7:
-            /* Make one poly empty */
-            DisAndCall(EmptyPoly, 1, head);
-            break;
-        case 8:
-            /* Make changes to a poly */
-            ChangePoly(head);
-            break;
+        // case 2:
+        //     /* Output all polys */
+        //     ShowList(head);
+        //     break;
+        // case 3:
+        //     /* Add 2 polys */
+        //     DisAndCall2(&AddPoly, head);
+        //     break;
+        // case 4:
+        //     /* Sub 2 polys */
+        //     DisAndCall2(SubPoly, head);
+        //     break;
+        // case 5:
+        //     /* Solve One poly */
+        //     SolvePoly(head);
+        //     break;
+        // case 6:
+        //     /* Del One poly */
+        //     DelPoly(head);
+        //     break;
+        // case 7:
+        //     /* Make one poly empty */
+        //     DisAndCall(EmptyPoly, head);
+        //     break;
+        // case 8:
+        //     /* Make changes to a poly */
+        //     ChangePoly(head);
+        //     break;
         default:
             break;
     }
+    return 0;
 }

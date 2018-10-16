@@ -1,12 +1,23 @@
+/* main.h
+ * Used to define main processing function.
+ * For detail please refer to readme.
+ */
+
 #if !defined(POLY_CAL)
 #define POLY_CAL
+
+#define DEBUG
+#define INIT_POLYARR_SIZE 100
+#define EACH_INCR_SIZE 10
 
 typedef struct polyNode node;           // A node
 typedef struct polyNode* pNode;         // A pointer to a node
 typedef struct polyNode* poly;          // A polynomial
 typedef struct polyList* pList;         // A list of polynomial
+typedef struct polyList* pPoly;         // A head of a poly node
 
-int DisAndCall(poly (*), int type, pList list);
+int DisAndCall(poly (*)(poly), pList list);
+int DisAndCall2(poly (*)(poly, poly), pList list);
 
 pList NewListNode(void);        // Make a new node for the polyList
 void MakePoly(pList);           // Make a new polynomial
@@ -16,7 +27,7 @@ poly SubPoly(poly, poly);       // Sub two polynomials
 int SolvePoly(pList);      // Solve the polynomial
 void DelPoly(pList);            // Delete the whole polynomial
 poly EmptyPoly(poly);           // Make one polynomial empty
-void ChangePoly(poly);          // Make change to one node of one polynomial
+void ChangePoly(pList);          // Make change to one node of one polynomial
 
 /* Basic Definition of the data structure of a polynomial*/
 struct polyNode {
