@@ -17,11 +17,10 @@ int DoOperation(int, pList);
 /* Main function */
 int main(int argc, char const *argv[])
 {
-
+    /* Init the list */
+    pList polyList = InitList();
     /* The choosing menu should run in a loop. */
     while(1) {
-        /* Init the list */
-        pList polyList = InitList();
 
         /* Init the menu */
         printf("******** Simple Polynomial Calculator ********\n\n");
