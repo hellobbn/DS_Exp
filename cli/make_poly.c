@@ -87,7 +87,6 @@ void MakePoly(pList head) {
 }
 
 void ProcessStr(char* s, pPoly head, int len) {
-    pNode p = head->head;
     int pos = 0;
     int exprStartPos = 0;
 
