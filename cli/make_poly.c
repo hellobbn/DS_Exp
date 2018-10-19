@@ -18,7 +18,7 @@ void MakePoly(pList head) {
     printf("NOTE: Please use the format 'ax^b' when entering\n");
     printf("For example: \n");
     printf("3x^2 - 4x^3 + 7x^-1\n");
-    printf("Press Enter to stop input");
+    printf("Press Enter to stop input\n");
 
     pList p = head;
     int jobDone = 0;
@@ -39,7 +39,7 @@ void MakePoly(pList head) {
         pList polytmp = NewListNode();
         p->next = polytmp;
         p = p->next; 
-        // flush_stdin();
+        flush_stdin();
 
         /* As we are adding a new poly, we are making a new list node
          * This list node also serves as the head of the list.
@@ -57,7 +57,7 @@ void MakePoly(pList head) {
 
             inputStr[len++] = c;
         }
-#ifdef DEBUG
+#ifdef DEBUG_MAKE_POLY
         printf("%s: inputStr: %s\n", __func__, inputStr);
 #endif
 
@@ -95,7 +95,7 @@ void ProcessStr(char* s, pPoly head, int len) {
     /* When met every opr, we are going to cut and let
      * another function process it
      */
-#ifdef DEBUG
+#ifdef DEBUG_MAKE_POLY
 printf("In function %s: len = %d\n", __func__, len);
 #endif
     while(pos < len) {
@@ -106,7 +106,7 @@ printf("In function %s: len = %d\n", __func__, len);
              * called ProcessExpr()
              */
 
-#ifdef DEBUG
+#ifdef DEBUG_MAKE_POLY
 printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos);
 #endif
             if(*(s + pos - 1) == '^') {
@@ -120,9 +120,9 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
                 l += 1;
             }
             ProcessExpr(s + exprStartPos, l, nNode);
-            p->next = nNode;
-            p = p->next;
+            InsertNode(nNode, head);
             exprStartPos = pos + 1;
+
         }
         pos ++;
     }
@@ -135,7 +135,7 @@ void ProcessExpr(char* s, int len, pNode p) {
      * and also note that a and b is not necessarily 
      * required.
      */
-#ifdef DEBUG
+#ifdef DEBUG_MAKE_POLY
 printf("In function %s: len = %d\n", __func__, len);
 for(int i = 0; i < len; ++ i) {
     putchar(s[i]);
@@ -144,15 +144,15 @@ putchar('\n');
 #endif
     int pos = 0;            // records where x is
     int hasB = 0;           // Expr has b
-    int hasA = 0;           // Expr has a
+    int hasA = 1;           // Expr has a
     int hasX = 0;           // Expr has x
     int xPos = len;           // Position of x, Default: no x
     while(pos < len) {
         if(*(s + pos) == 'x') {
             hasX = 1;
             xPos = pos;
-            if(pos != 0) {
-                hasA = 1;
+            if(pos == 0) {
+                hasA = 0;
             }
         }else if(*(s + pos) == '^') {
             hasB = 1;
@@ -173,7 +173,7 @@ putchar('\n');
         b = atoI(s + xPos + 2, lenB);
     }
 
-#ifdef DEBUG
+#ifdef DEBUG_MAKE_POLY
 printf("In function %s, a = %lf\t, b = %d\n", __func__, a, b);
 #endif
     p->freq = b;
