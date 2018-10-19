@@ -2,7 +2,7 @@
 # make all C files and generate executable
 
 # Define the compiler
-CC = gcc
+CC = gcc-8
 
 # Compiler flags
 CFLAGS = -g -Wall
