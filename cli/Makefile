@@ -11,7 +11,7 @@ CFLAGS = -g -Wall
 TARGET = calculator
 
 # C source files
-SRCS = assistant.c main.c make_poly.c
+SRCS = assistant.c main.c make_poly.c common.c
 
 # Object files
 OBJS = $(SRCS: .c = .o)

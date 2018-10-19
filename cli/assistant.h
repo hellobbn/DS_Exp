@@ -8,3 +8,4 @@
 void flush_stdin(void);         
 pNode MakeNode(void);    
 pList NewListNode(void);
+void ReallocStr(char** s, int len);

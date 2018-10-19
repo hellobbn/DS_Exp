@@ -9,6 +9,7 @@
 #define DEBUG
 #define INIT_POLYARR_SIZE 100
 #define EACH_INCR_SIZE 10
+#define EXPR_INIT_LEN 10
 
 typedef struct polyNode node;           // A node
 typedef struct polyNode* pNode;         // A pointer to a node

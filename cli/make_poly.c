@@ -4,12 +4,15 @@
 
 #include "main.h"
 #include "assistant.h"
+#include "common.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
 void ProcessStr(char* s, pPoly head, int len);
+void ProcessExpr(char* s, int len, pNode p);
+
 void MakePoly(pList head) {
     /* help messages */
     printf("NOTE: Please use the format 'ax^b' when entering\n");
@@ -33,15 +36,14 @@ void MakePoly(pList head) {
         char c;
         char* inputStr = malloc(bufferTotalLen);
         int len = 0;
-        pPoly polytmp = NewListNode();
+        pList polytmp = NewListNode();
+        p->next = polytmp;
+        p = p->next; 
         // flush_stdin();
 
         /* As we are adding a new poly, we are making a new list node
          * This list node also serves as the head of the list.
          */
-        pPoly lnode = NewListNode();
-        p->next = lnode;
-        p = p->next;
         printf("Please enter one polynomial: ");
         while((c = getchar()) != '\n') {
             if (c == ' ') {
@@ -50,15 +52,7 @@ void MakePoly(pList head) {
             
             /* if s is full */
             if (len == bufferTotalLen) {
-                bufferTotalLen += STR_INCR_STEP;
-                char* tmp = realloc(polytmp, bufferTotalLen);
-
-                if(!tmp) {
-                    printf("Error: In function %s, buffer is full but realloc() failed",\
-                            __func__);
-                    exit(1);
-                }
-                inputStr = tmp;
+                ReallocStr(&inputStr, len);
             }
 
             inputStr[len++] = c;
@@ -69,9 +63,119 @@ void MakePoly(pList head) {
 
         /* Go to process the whole string */
         ProcessStr(inputStr, p, len);
+
+        /* Another poly ? */
+        while(1) {
+            printf("Do you want to enter another polynomial? (y/N)");
+            char choice = 'N';
+            char c = getchar();
+            if(c != '\n') {
+                choice = c;
+            }
+
+            if(choice == 'N' || choice == 'n') {
+                jobDone = 1;
+                break;
+            } else if(choice == 'Y' || choice == 'y') {
+                jobDone = 0;
+                break;
+            } else {
+                printf("Please enter y or N!\n");
+            }
+        }
     }
 }
 
 void ProcessStr(char* s, pPoly head, int len) {
-    
+    pNode p = head->head;
+    int pos = 0;
+    int exprStartPos = 0;
+
+
+    /* When met every opr, we are going to cut and let
+     * another function process it
+     */
+#ifdef DEBUG
+printf("In function %s: len = %d\n", __func__, len);
+#endif
+    while(pos < len) {
+        if(IsOpr(*(s+pos)) == 1 || pos == len - 1) {
+            /* First of all, we are going to cut here
+             * Then we will make a new polyNode to save it
+             * We are going to passing them to a new function
+             * called ProcessExpr()
+             */
+
+#ifdef DEBUG
+printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos);
+#endif
+            if(*(s + pos - 1) == '^') {
+                /* we found a expr whose freq is a - */
+                pos ++;
+                continue;
+            }
+            pNode nNode = MakeNode();
+            int l = pos - exprStartPos;
+            if(pos == len - 1) {
+                l += 1;
+            }
+            ProcessExpr(s + exprStartPos, l, nNode);
+            p->next = nNode;
+            p = p->next;
+            exprStartPos = pos + 1;
+        }
+        pos ++;
+    }
+}
+
+void ProcessExpr(char* s, int len, pNode p) {
+    /* We are assuming the format like this:
+     * ax^b
+     * where a is a double and b is an int
+     * and also note that a and b is not necessarily 
+     * required.
+     */
+#ifdef DEBUG
+printf("In function %s: len = %d\n", __func__, len);
+for(int i = 0; i < len; ++ i) {
+    putchar(s[i]);
+}
+putchar('\n');
+#endif
+    int pos = 0;            // records where x is
+    int hasB = 0;           // Expr has b
+    int hasA = 0;           // Expr has a
+    int hasX = 0;           // Expr has x
+    int xPos = len;           // Position of x, Default: no x
+    while(pos < len) {
+        if(*(s + pos) == 'x') {
+            hasX = 1;
+            xPos = pos;
+            if(pos != 0) {
+                hasA = 1;
+            }
+        }else if(*(s + pos) == '^') {
+            hasB = 1;
+        }
+        pos ++;
+    }
+    int lenA = xPos;
+    int lenB = len - xPos - 2;
+
+    // Process a and b
+    double a = 1;
+    int b = hasX ? 1 : 0;
+
+    if(hasA){
+        a = atoF(s, lenA);
+    }
+    if(hasB){
+        b = atoI(s + xPos + 2, lenB);
+    }
+
+#ifdef DEBUG
+printf("In function %s, a = %lf\t, b = %d\n", __func__, a, b);
+#endif
+    p->freq = b;
+    p->coff = a;
 }
