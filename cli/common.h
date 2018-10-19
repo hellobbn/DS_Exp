@@ -12,6 +12,7 @@
 double atoF(char* s, int len);
 int atoI(char* s, int len);
 int IsOpr(char c);
+int absF(double x);
 
 #endif // COMMON_H
 

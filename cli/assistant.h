@@ -10,3 +10,4 @@ pNode MakeNode(void);
 pList NewListNode(void);
 void ReallocStr(char** s, int len);
 void InsertNode(pNode node, pPoly head);
+void PrintPoly(pPoly p);

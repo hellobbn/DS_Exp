@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void PrintNode(pNode n);
+
 /* NewListNode(): Make new node for the list */
 pList NewListNode(void) {
     pList listNode = malloc(sizeof(struct polyList));
@@ -70,4 +72,40 @@ void InsertNode(pNode node, pPoly polyHead) {
         }
     }
 
+}
+
+/* PrintPoly(): print out the poly */
+void PrintPoly(pPoly p) {
+    pNode nodePoint = p->head;
+    int nItem = 0;
+    while(nodePoint != NULL) {
+        /* Print each node */
+        if(nItem == 0) {
+            PrintNode(nodePoint);
+        } else {
+            /* if coff = 0, printNode() could handle it 
+             * So there is no need to handle it.
+             * Simply skip the condition.
+             */
+            if(nodePoint->coff > 0) {
+                printf(" + ");
+            } else if(nodePoint->coff < 0) {
+                printf(" - ");
+            }
+            PrintNode(nodePoint);
+        }
+        nodePoint = nodePoint->next;
+    }
+}
+
+void PrintNode(pNode n) {
+    double a = n->coff;
+    double b = n->freq;
+    if(a != 0) {
+        if(b == 0) {
+            if( ) {
+                
+            }
+        }
+    }
 }
