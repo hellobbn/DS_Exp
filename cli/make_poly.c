@@ -58,12 +58,15 @@ void MakePoly(pList head) {
             inputStr[len++] = c;
         }
 #ifdef DEBUG_MAKE_POLY
-        printf("%s: inputStr: %s\n", __func__, inputStr);
+printf("%s: inputStr: %s\n", __func__, inputStr);
 #endif
 
-        /* Go to process the whole string */
-        ProcessStr(inputStr, p, len);
+        /* Go to process the whole string when len != 0*/
+        if(len) ProcessStr(inputStr, p, len);
 
+#ifdef DEBUG_MAKE_POLY
+PrintPoly(p);
+#endif
         /* Another poly ? */
         while(1) {
             printf("Do you want to enter another polynomial? (y/N)");
@@ -108,7 +111,11 @@ printf("In function %s: len = %d\n", __func__, len);
 #ifdef DEBUG_MAKE_POLY
 printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos);
 #endif
-            if(*(s + pos - 1) == '^') {
+            if(pos == exprStartPos) {
+                pos ++;
+                continue;
+            }
+            if(*(s + pos - 1) == '^' && pos != len - 1) {
                 /* we found a expr whose freq is a - */
                 pos ++;
                 continue;
@@ -118,9 +125,11 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
             if(pos == len - 1) {
                 l += 1;
             }
+
             ProcessExpr(s + exprStartPos, l, nNode);
+
             InsertNode(nNode, head);
-            exprStartPos = pos + 1;
+            exprStartPos = pos;
 
         }
         pos ++;
@@ -164,7 +173,6 @@ putchar('\n');
     // Process a and b
     double a = 1;
     int b = hasX ? 1 : 0;
-
     if(hasA){
         a = atoF(s, lenA);
     }

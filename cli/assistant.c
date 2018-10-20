@@ -1,5 +1,6 @@
 #include "main.h"
 #include "assistant.h"
+#include "common.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -55,18 +56,20 @@ void InsertNode(pNode node, pPoly polyHead) {
         pNode p = polyHead->head;
         int nodeFreq = node->freq;
         while(p != NULL) {
-            if(p->next != NULL) {
+            if(p->freq == nodeFreq) {
+                p->coff += node->coff;
+                break;
+            } else if(p->next != NULL) {
                 if(p->next->freq < nodeFreq) {
                     pNode tmp = p->next;
                     p->next = node;
                     node->next = tmp;
-                    /* now we have finished the insertion */
                     break;
                 }
             } else {
-                /* We have reached the final node */
                 p->next = node;
                 node->next = NULL;
+                break;
             }
             p = p->next;
         }
@@ -81,6 +84,7 @@ void PrintPoly(pPoly p) {
     while(nodePoint != NULL) {
         /* Print each node */
         if(nItem == 0) {
+            if(nodePoint->coff < 0) printf("-");
             PrintNode(nodePoint);
         } else {
             /* if coff = 0, printNode() could handle it 
@@ -95,16 +99,30 @@ void PrintPoly(pPoly p) {
             PrintNode(nodePoint);
         }
         nodePoint = nodePoint->next;
+        nItem ++;
     }
+    printf("\n");
 }
 
 void PrintNode(pNode n) {
-    double a = n->coff;
-    double b = n->freq;
+    double a = absF(n->coff);
+    int b = n->freq;
+
+    /* Only print out things when a is not equal to 0 */
     if(a != 0) {
         if(b == 0) {
-            if( ) {
-                
+            printf("%.2lf", a);
+        } else if(b == 1){
+            if(absF(a - 1) < 10E-3) {
+                printf("x");
+            } else {
+                printf("%.2lfx", a);
+            }
+        } else {
+            if(absF(a - 1) < 10E-3) {
+                printf("x^%d", b);
+            } else {
+                printf("%.2lfx^%d", a, b);
             }
         }
     }
