@@ -83,6 +83,13 @@ void InsertNode(pNode node, pPoly polyHead) {
 void PrintPoly(pPoly p) {
     pNode nodePoint = p->head;
     int nItem = 0;
+
+    /* Empty node */
+    if(nodePoint->coff == 0 && nodePoint->freq == 0) {
+        printf("0\n");
+        return;
+    }
+
     while(nodePoint != NULL) {
         /* Print each node */
         if(nItem == 0) {

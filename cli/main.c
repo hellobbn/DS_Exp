@@ -92,10 +92,10 @@ int DoOperation(int num, pList head) {
             /* Del One poly */
             DelPoly(head);
             break;
-        // case 7:
-        //     /* Make one poly empty */
-        //     EmptyPoly(EmptyPoly, head);
-        //     break;
+        case 7:
+            /* Make one poly empty */
+            EmptyPoly(head);
+            break;
         // case 8:
         //     /* Make changes to a poly */
         //     ChangePoly(head);
