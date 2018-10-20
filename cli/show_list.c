@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 /* We are assumming it has a head pointer */
-void ShowList(pList list) {
+void ShowList(pList list, int welcome) {
     int cnt = 0;
     pPoly p = list->next;
     while(p != NULL) {
@@ -13,8 +13,10 @@ void ShowList(pList list) {
         p = p->next;
     }
 
-    printf("Press ENTER to quit.....");
-    flush_stdin();
-    getchar();
+    if(welcome) {
+        printf("Press ENTER to quit.....");
+        flush_stdin();
+        getchar();
+    }
 
 }
