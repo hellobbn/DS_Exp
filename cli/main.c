@@ -70,10 +70,10 @@ int DoOperation(int num, pList head) {
             /* Add new polys */
             MakePoly(head);
             break;
-        // case 2:
-        //     /* Output all polys */
-        //     ShowList(head);
-        //     break;
+        case 2:
+            /* Output all polys */
+            ShowList(head);
+            break;
         // case 3:
         //     /* Add 2 polys */
         //     DisAndCall2(&AddPoly, head);
