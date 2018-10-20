@@ -36,3 +36,16 @@ int IsOpr(char c) {
 double absF(double x) {
     return x > 0 ? x : -x;
 }
+
+double PoW(double x, int p) {
+    int po = abs(p);
+    double result = 1;
+    for(int i = 0; i < po; ++ i) {
+        result *= x;
+    }
+    if(p > 0) {
+        return result;
+    } else {
+        return 1/result;
+    }
+}

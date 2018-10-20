@@ -84,10 +84,10 @@ int DoOperation(int num, pList head) {
             /* Sub 2 polys */
             DisAndCall(SubPoly, head);
             break;
-        // case 5:
-        //     /* Solve One poly */
-        //     SolvePoly(head);
-        //     break;
+        case 5:
+            /* Solve One poly */
+            SolvePoly(head);
+            break;
         // case 6:
         //     /* Del One poly */
         //     DelPoly(head);
