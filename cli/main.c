@@ -88,10 +88,10 @@ int DoOperation(int num, pList head) {
             /* Solve One poly */
             SolvePoly(head);
             break;
-        // case 6:
-        //     /* Del One poly */
-        //     DelPoly(head);
-        //     break;
+        case 6:
+            /* Del One poly */
+            DelPoly(head);
+            break;
         // case 7:
         //     /* Make one poly empty */
         //     EmptyPoly(EmptyPoly, head);

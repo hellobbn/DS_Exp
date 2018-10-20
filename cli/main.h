@@ -26,7 +26,7 @@ void ShowList(pList, int);           // Display all polynomials
 pPoly AddPoly(pPoly, pPoly);       // Add two polynomials
 pPoly SubPoly(pPoly, pPoly);       // Sub two polynomials
 double SolvePoly(pList);      // Solve the polynomial
-void DelPoly(pPoly);            // Delete the whole polynomial
+void DelPoly(pList);            // Delete the whole polynomial
 poly EmptyPoly(poly);           // Make one polynomial empty
 void ChangePoly(pList);          // Make change to one node of one polynomial
 
