@@ -129,3 +129,17 @@ void PrintNode(pNode n) {
         }
     }
 }
+
+pPoly FindPoly(pList p, int num) {
+    pPoly tmp = p;
+    for(int n = 0; n < num; ++ n) {
+        if(tmp->next != NULL){
+            tmp = tmp->next;
+        } else {
+            tmp = NULL;
+            break;
+        }
+    }
+
+    return tmp;
+}
