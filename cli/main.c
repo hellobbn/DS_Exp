@@ -5,6 +5,7 @@
 */
 
 #include "main.h"
+#include "assistant.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +14,7 @@
 /* Function used in this file */
 pList InitList(void);
 int DoOperation(int, pList);
+void DisAndCall(pPoly (*)(pPoly, pPoly), pList list);
 
 /* Main function */
 int main(int argc, char const *argv[])
@@ -72,16 +74,16 @@ int DoOperation(int num, pList head) {
             break;
         case 2:
             /* Output all polys */
-            ShowList(head);
+            ShowList(head, 1);
             break;
-        // case 3:
-        //     /* Add 2 polys */
-        //     DisAndCall2(&AddPoly, head);
-        //     break;
-        // case 4:
-        //     /* Sub 2 polys */
-        //     DisAndCall2(SubPoly, head);
-        //     break;
+        case 3:
+            /* Add 2 polys */
+            DisAndCall(&AddPoly, head);
+            break;
+        case 4:
+            /* Sub 2 polys */
+            DisAndCall(SubPoly, head);
+            break;
         // case 5:
         //     /* Solve One poly */
         //     SolvePoly(head);
@@ -92,7 +94,7 @@ int DoOperation(int num, pList head) {
         //     break;
         // case 7:
         //     /* Make one poly empty */
-        //     DisAndCall(EmptyPoly, head);
+        //     EmptyPoly(EmptyPoly, head);
         //     break;
         // case 8:
         //     /* Make changes to a poly */
@@ -102,4 +104,38 @@ int DoOperation(int num, pList head) {
             break;
     }
     return 0;
+}
+
+void DisAndCall(pPoly (*PolyOprFunc)(pPoly, pPoly), pList list) {
+    printf("Please choose two poly to do the operation: \n");
+
+    /* Print out the list so that we can choose one */
+    ShowList(list, 0);
+    int polyNumA, polyNumB;
+    scanf("%d%d", &polyNumA, &polyNumB);
+
+    /* Find The poly we need */
+    pPoly polyA = FindPoly(list, polyNumA);
+    pPoly polyB = FindPoly(list, polyNumB);
+
+    /* Handle NULL Pointer*/
+    if(!polyA || !polyB) {
+        printf("ERROR: In %s: The requested polynomial not exist!!!\n", __func__);
+        printf("Quitting the function....\n");
+        return;
+    }
+#ifdef DEBUG_ADD_DEL_POLY
+    PrintPoly(polyA);
+    PrintPoly(polyB);
+#endif
+    pPoly result = (*PolyOprFunc)(polyA, polyB);
+    if(result) {
+        PrintPoly(result);
+    } else {
+        printf("Some Error occurred! Quitting....");
+        return;
+    }
+
+    printf("Press Enter to return....");
+    getchar();
 }

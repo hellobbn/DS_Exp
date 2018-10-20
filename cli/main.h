@@ -19,16 +19,14 @@ typedef struct polyNode* poly;          // A polynomial
 typedef struct polyList* pList;         // A list of polynomial
 typedef struct polyList* pPoly;         // A head of a poly node
 
-int DisAndCall(poly (*)(poly), pList list);
-int DisAndCall2(poly (*)(poly, poly), pList list);
 
 pList NewListNode(void);        // Make a new node for the polyList
 void MakePoly(pList);           // Make a new polynomial
-void ShowList(pList);           // Display all polynomials
-poly AddPoly(poly, poly);       // Add two polynomials
-poly SubPoly(poly, poly);       // Sub two polynomials
+void ShowList(pList, int);           // Display all polynomials
+pPoly AddPoly(pPoly, pPoly);       // Add two polynomials
+pPoly SubPoly(pPoly, pPoly);       // Sub two polynomials
 int SolvePoly(pList);      // Solve the polynomial
-void DelPoly(pList);            // Delete the whole polynomial
+void DelPoly(pPoly);            // Delete the whole polynomial
 poly EmptyPoly(poly);           // Make one polynomial empty
 void ChangePoly(pList);          // Make change to one node of one polynomial
 
