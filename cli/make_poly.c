@@ -86,6 +86,7 @@ PrintPoly(p);
                 printf("Please enter y or N!\n");
             }
         }
+        free(inputStr);
     }
 }
 
@@ -111,7 +112,7 @@ printf("In function %s: len = %d\n", __func__, len);
 #ifdef DEBUG_MAKE_POLY
 printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos);
 #endif
-            if(pos == exprStartPos) {
+            if(pos == exprStartPos && IsOpr(*(s+pos))) {
                 pos ++;
                 continue;
             }
