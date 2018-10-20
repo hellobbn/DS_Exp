@@ -58,6 +58,8 @@ void InsertNode(pNode node, pPoly polyHead) {
         while(p != NULL) {
             if(p->freq == nodeFreq) {
                 p->coff += node->coff;
+                /* In this situation, the node is note needed anymore*/
+                free(node);
                 break;
             } else if(p->next != NULL) {
                 if(p->next->freq < nodeFreq) {
