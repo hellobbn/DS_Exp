@@ -12,3 +12,6 @@ void ReallocStr(char** s, int len);
 void InsertNode(pNode node, pPoly head);
 void PrintPoly(pPoly p);
 pPoly FindPoly(pList p, int num);
+pNode FindNode(pPoly p, int freq);
+pNode FindPrevNode(pPoly p, int freq);
+int PrintNode(pNode n);

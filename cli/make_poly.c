@@ -5,13 +5,12 @@
 #include "main.h"
 #include "assistant.h"
 #include "common.h"
+#include "make_poly.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-void ProcessStr(char* s, pPoly head, int len);
-void ProcessExpr(char* s, int len, pNode p);
 
 void MakePoly(pList head) {
     /* help messages */
@@ -130,7 +129,7 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
             ProcessExpr(s + exprStartPos, l, nNode);
 
             InsertNode(nNode, head);
-            exprStartPos = pos;
+            exprStartPos = (*(s + pos) == '-') ? pos : pos+1;
 
         }
         pos ++;
@@ -138,7 +137,7 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
 }
 
 void ProcessExpr(char* s, int len, pNode p) {
-    /* We are assuming the format like this:
+    /* We assume the format like this:
      * ax^b
      * where a is a double and b is an int
      * and also note that a and b is not necessarily 
@@ -171,11 +170,16 @@ putchar('\n');
     int lenA = xPos;
     int lenB = len - xPos - 2;
 
-    // Process a and b
+    /* Process a and b */
     double a = 1;
     int b = hasX ? 1 : 0;
     if(hasA){
-        a = atoF(s, lenA);
+        /* if a == -1 */ 
+        if(lenA == 1 && *(s) == '-') {
+            a = -1;
+        } else {
+            a = atoF(s, lenA);
+        }
     }
     if(hasB){
         b = atoI(s + xPos + 2, lenB);

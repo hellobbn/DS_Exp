@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void PrintNode(pNode n);
 
 /* NewListNode(): Make new node for the list */
 pList NewListNode(void) {
@@ -83,18 +82,13 @@ void InsertNode(pNode node, pPoly polyHead) {
 void PrintPoly(pPoly p) {
     pNode nodePoint = p->head;
     int nItem = 0;
-
-    /* Empty node */
-    if(nodePoint->coff == 0 && nodePoint->freq == 0) {
-        printf("0\n");
-        return;
-    }
+    int cnt = 0;
 
     while(nodePoint != NULL) {
         /* Print each node */
         if(nItem == 0) {
             if(nodePoint->coff < 0) printf("-");
-            PrintNode(nodePoint);
+            cnt += PrintNode(nodePoint);
         } else {
             /* if coff = 0, printNode() could handle it 
              * So there is no need to handle it.
@@ -105,15 +99,18 @@ void PrintPoly(pPoly p) {
             } else if(nodePoint->coff < 0) {
                 printf(" - ");
             }
-            PrintNode(nodePoint);
+            cnt += PrintNode(nodePoint);
         }
         nodePoint = nodePoint->next;
         nItem ++;
     }
+    if(cnt == 0) {
+        printf("0");
+    }
     printf("\n");
 }
 
-void PrintNode(pNode n) {
+int PrintNode(pNode n) {
     double a = absF(n->coff);
     int b = n->freq;
 
@@ -134,7 +131,9 @@ void PrintNode(pNode n) {
                 printf("%.2lfx^%d", a, b);
             }
         }
+        return 1;
     }
+    return 0;
 }
 
 pPoly FindPoly(pList p, int num) {
@@ -149,4 +148,27 @@ pPoly FindPoly(pList p, int num) {
     }
 
     return tmp;
+}
+
+pNode FindNode(pPoly p, int freq) {
+    pNode pointer = p->head;
+    while(pointer != NULL) {
+        if(pointer->freq == freq) {
+            /* We found the node */
+            break;
+        }
+    }
+    return pointer;
+}
+
+pNode FindPrevNode(pPoly p, int freq) {
+    pNode n = p->head;
+    while(n->next != NULL) {
+        if(n->next->freq == freq) {
+            return n;
+        } else {
+            n = n->next;
+        }
+    }
+    return NULL;
 }
