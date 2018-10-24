@@ -4,21 +4,27 @@
 # Define the compiler
 CC = gcc-8
 
+# Define include path
+SRC = src
+
 # Compiler flags
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Iinclude
 
 # Build target executable
 TARGET = calculator
 
 # C source files
-SRCS = *.c
+SRCS = $(SRC)/*.c
+
+# C header files
+DEPS = include/
 
 # Object files
 OBJS = $(SRCS: .c = .o)
 
 # Default entry
-all:
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+all: $(SRCS) $(HEADERS)
+	$(CC) $(CFLAGS) $(HEADERS) -o $(TARGET) $(SRCS)
 
 clean:
 	rm -rf calculator*
