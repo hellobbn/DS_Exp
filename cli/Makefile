@@ -16,9 +16,6 @@ TARGET = calculator
 # C source files
 SRCS = $(SRC)/*.c
 
-# C header files
-DEPS = include/
-
 # Object files
 OBJS = $(SRCS: .c = .o)
 
