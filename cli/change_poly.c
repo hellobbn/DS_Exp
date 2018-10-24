@@ -15,7 +15,7 @@
 
 void __change_poly(pPoly p);
 void change_insert_node(pPoly p);
-void change_delete_node(pPoly p);
+void change_delete_node(pPoly p, int flag, int f);
 void change_change_node(pPoly p);
 
 
@@ -49,10 +49,12 @@ void __change_poly(pPoly p) {
             break;
         case 2:
             /* Delete a node */
-            change_delete_node(p);
+            change_delete_node(p, 0, 0);
+            break;
         case 3:
             /* change a node */
             change_change_node(p);
+            break;
         default:
             printf("ERROR: Invaild Input!!!\n");
             break;
@@ -83,11 +85,15 @@ void change_insert_node(pPoly p) {
     PrintPoly(p);
 }
 
-void change_delete_node(pPoly p) {
+void change_delete_node(pPoly p, int flag, int f) {
+    int freq = 0;
+    if(flag == 0) {
     printf("You are about to spacify the node to make changes to.\n");
     printf("Enter the freq of the node to find it: ");
-    int freq = 0;
     scanf("%d", &freq);
+    } else {
+        freq = f;
+    }
     pNode tmp = NULL;
     if(p->head->freq == freq) {
         tmp = p->head;
@@ -108,18 +114,33 @@ void change_change_node(pPoly p) {
     printf("Enter the freq of the node you want to change: ");
     int freq;
     scanf("%d", &freq);
+    pNode n = NULL;
+    n = FindNode(p, freq);
 
-    pNode n = FindNode(p, freq);
     printf("We are about to change ");
     PrintNode(n);
-
-    double newCoff;
-    int newFreq;
-    printf("Enter the new Coff here: ");
-    scanf("%le", &newCoff);
-    printf("Enter the new freq here: ");
-    scanf("%d", &newFreq);
-
-    n->freq = newFreq;
-    n->coff = newCoff;
+    printf("\n\n");
+    char buff[100];
+    printf("Please enter the new node expr, format: \n ax^b \n:");
+    char c;
+    int len = 0;
+    flush_stdin();
+    pNode tmp = MakeNode();
+    while((c = getchar()) != '\n'){
+        if(c == ' ') continue;
+        buff[len++] = c;
+    }
+    int status;
+    status = ProcessExpr(buff, len, tmp);
+    if(status) {
+        change_delete_node(p, 1, freq);        // Delete old node
+        InsertNode(tmp, p);                 // Insert new node
+        printf("Done\n");
+    } else {
+        printf("ERROR: INPUT ERROR\n");
+        printf("will NOT change the node\n");
+    }
+    printf("the poly after that is ");
+    PrintPoly(p);
+    printf("\n");
 }

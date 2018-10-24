@@ -28,6 +28,10 @@ double SolvePoly(pList list) {
     } else {
         pNode pPoint = p->head;
         while(pPoint != NULL) {
+            if(pPoint->freq < 0 && x == 0) {
+                printf("ERROR: DEVIDE BY ZERO\n");
+                return 0;
+            }
             result += __solve_node(pPoint, x);
             pPoint = pPoint->next;
         }

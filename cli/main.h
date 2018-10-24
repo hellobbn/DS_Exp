@@ -6,7 +6,7 @@
 #if !defined(POLY_CAL)
 #define POLY_CAL
 
-// #define DEBUG_MAKE_POLY
+#define DEBUG_MAKE_POLY
 #define DEBUG
 
 #define INIT_POLYARR_SIZE 100

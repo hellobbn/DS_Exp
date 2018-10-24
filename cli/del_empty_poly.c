@@ -4,12 +4,10 @@
 
 #include "main.h"
 #include "assistant.h"
+#include "del_empty_poly.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-
-void DestroyPoly(pPoly p);
-void __empty_poly(pPoly p);
 
 void DelPoly(pList head) {
     int choice = 0;

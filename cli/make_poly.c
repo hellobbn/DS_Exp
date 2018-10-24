@@ -6,6 +6,7 @@
 #include "assistant.h"
 #include "common.h"
 #include "make_poly.h"
+#include "del_empty_poly.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,15 +31,16 @@ void MakePoly(pList head) {
     /* Main part: make new poly and append
      * When not asked to quit, continue adding polys to list 
      */
+    int status = 1;
     while(!jobDone) {
         int bufferTotalLen = STR_INIT_LEN;
         char c;
         char* inputStr = malloc(bufferTotalLen);
         int len = 0;
-        pList polytmp = NewListNode();
-        p->next = polytmp;
-        p = p->next; 
         flush_stdin();
+        /* Only create new node when first work succeeded */   
+        pList polytmp = NewListNode();
+        status = 1;
 
         /* As we are adding a new poly, we are making a new list node
          * This list node also serves as the head of the list.
@@ -57,11 +59,17 @@ void MakePoly(pList head) {
             inputStr[len++] = c;
         }
 #ifdef DEBUG_MAKE_POLY
-printf("%s: inputStr: %s\n", __func__, inputStr);
+printf("%s: inputStr: %s\n status = %d\n", __func__, inputStr, status);
 #endif
 
-        /* Go to process the whole string when len != 0*/
-        if(len) ProcessStr(inputStr, p, len);
+        /* Go to process the whole string when len != 0 */
+        if(len) status = ProcessStr(inputStr, polytmp, len);
+        if(status) {
+            p->next = polytmp;
+            p = p->next;
+        } else {
+            free(polytmp);
+        }
 
 #ifdef DEBUG_MAKE_POLY
 PrintPoly(p);
@@ -89,7 +97,7 @@ PrintPoly(p);
     }
 }
 
-void ProcessStr(char* s, pPoly head, int len) {
+int ProcessStr(char* s, pPoly head, int len) {
     int pos = 0;
     int exprStartPos = 0;
 
@@ -126,7 +134,13 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
                 l += 1;
             }
 
-            ProcessExpr(s + exprStartPos, l, nNode);
+            int status = ProcessExpr(s + exprStartPos, l, nNode);
+            /* If an error occurred */
+            if(status != 1) {
+                printf("ERROR: INPUT ERROR\n");
+                DestroyPoly(head);
+                return 0;
+            }
 
             InsertNode(nNode, head);
             exprStartPos = (*(s + pos) == '-') ? pos : pos+1;
@@ -134,9 +148,10 @@ printf("In function %s: posStart = %d\n pos = %d\n", __func__, exprStartPos, pos
         }
         pos ++;
     }
+    return 1;
 }
 
-void ProcessExpr(char* s, int len, pNode p) {
+int ProcessExpr(char* s, int len, pNode p) {
     /* We assume the format like this:
      * ax^b
      * where a is a double and b is an int
@@ -155,15 +170,30 @@ putchar('\n');
     int hasA = 1;           // Expr has a
     int hasX = 0;           // Expr has x
     int xPos = len;           // Position of x, Default: no x
+    int bspos = len;
+    char check_c = s[len - 1];
+    if(check_c == '-' || check_c == '^') {
+        return 0;
+    }
     while(pos < len) {
-        if(*(s + pos) == 'x') {
+        check_c = *(s + pos);
+        if(check_c == 'x') {
+            /* has 2 x -> error */
+            if(hasX == 1) {
+                return 0;
+            }
+
             hasX = 1;
             xPos = pos;
             if(pos == 0) {
                 hasA = 0;
             }
-        }else if(*(s + pos) == '^') {
+        }else if(check_c == '^') {
             hasB = 1;
+            bspos = pos;
+        } else if(check_c == '.' && pos > bspos) {
+            /* double in freq */
+            return 0;
         }
         pos ++;
     }
@@ -190,4 +220,5 @@ printf("In function %s, a = %lf\t, b = %d\n", __func__, a, b);
 #endif
     p->freq = b;
     p->coff = a;
+    return 1;
 }

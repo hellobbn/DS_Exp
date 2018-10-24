@@ -1,3 +1,10 @@
+/* PolyCalculator
+ * Version 1.0
+ * Created by bbn(hellobbn)
+ * Mail: clfbbn@gmail.com
+ * All rights reserved
+ */
+
 /* main.c
  * Implementing basic user interface and 
  * call other functions to achieve different 
@@ -6,6 +13,7 @@
 
 #include "main.h"
 #include "assistant.h"
+#include "common.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,10 +104,10 @@ int DoOperation(int num, pList head) {
             /* Make one poly empty */
             EmptyPoly(head);
             break;
-        // case 8:
-        //     /* Make changes to a poly */
-        //     ChangePoly(head);
-        //     break;
+        case 8:
+            /* Make changes to a poly */
+            ChangePoly(head);
+            break;
         default:
             break;
     }
@@ -136,6 +144,7 @@ void DisAndCall(pPoly (*PolyOprFunc)(pPoly, pPoly), pList list) {
         return;
     }
 
+    flush_stdin();
     printf("Press Enter to return....");
     getchar();
 }

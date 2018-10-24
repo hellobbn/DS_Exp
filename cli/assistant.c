@@ -157,6 +157,7 @@ pNode FindNode(pPoly p, int freq) {
             /* We found the node */
             break;
         }
+        pointer = pointer->next;
     }
     return pointer;
 }
