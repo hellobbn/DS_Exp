@@ -1,4 +1,5 @@
 #include "main.h"
+#include "common.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,4 +49,10 @@ double PoW(double x, int p) {
     } else {
         return 1/result;
     }
+}
+
+void GoodBye(int c) {
+    printf("%d", c);
+    printf("\n\nMoriturus te saluto.\n\n");
+    exit(0);
 }

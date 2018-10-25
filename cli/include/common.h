@@ -14,6 +14,7 @@ int atoI(char* s, int len);
 int IsOpr(char c);
 double absF(double x);
 double PoW(double x, int p);
+void GoodBye(int i);
 
 #endif // COMMON_H
 

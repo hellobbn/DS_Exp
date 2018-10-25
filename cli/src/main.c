@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 
 /* Function used in this file */
@@ -27,6 +28,8 @@ void DisAndCall(pPoly (*)(pPoly, pPoly), pList list);
 /* Main function */
 int main(int argc, char const *argv[])
 {
+    /* Handle Ctrl-C command */
+    signal(SIGINT, GoodBye);
     /* Init the list */
     pList polyList = InitList();
     /* The choosing menu should run in a loop. */
@@ -45,6 +48,7 @@ int main(int argc, char const *argv[])
         printf("7. Make a polynomial empty.\n");
         printf("8. Change one node of a polynomial.\n");
         printf("9. Poly differential\n");
+        printf("10. Indefinite integral");
 
         printf("\n\nEnter your choice: ");
 
@@ -54,7 +58,7 @@ int main(int argc, char const *argv[])
         scanf("%d", &choice);
 
         /* check if the input is valid */
-        if (!(choice >= 1 && choice <= 9)) {
+        if (!(choice >= 1 && choice <= 10)) {
             printf("Error: Invalid Input!");
             continue;
         }
@@ -112,6 +116,10 @@ int DoOperation(int num, pList head) {
         case 9:
             /* poly's n differential */ 
             PolyDiF(head); 
+            break;
+        case 10:
+            /* indefinite integral */
+            PolyInfI(head);
             break;
         default:
             break;
