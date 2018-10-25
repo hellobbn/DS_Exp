@@ -44,6 +44,7 @@ int main(int argc, char const *argv[])
         printf("6. Destroy a polymonial.\n");
         printf("7. Make a polynomial empty.\n");
         printf("8. Change one node of a polynomial.\n");
+        printf("9. Poly differential\n");
 
         printf("\n\nEnter your choice: ");
 
@@ -53,7 +54,7 @@ int main(int argc, char const *argv[])
         scanf("%d", &choice);
 
         /* check if the input is valid */
-        if (!(choice >= 1 && choice <= 8)) {
+        if (!(choice >= 1 && choice <= 9)) {
             printf("Error: Invalid Input!");
             continue;
         }
@@ -107,6 +108,10 @@ int DoOperation(int num, pList head) {
         case 8:
             /* Make changes to a poly */
             ChangePoly(head);
+            break;
+        case 9:
+            /* poly's n differential */ 
+            PolyDiF(head); 
             break;
         default:
             break;

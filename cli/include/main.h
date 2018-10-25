@@ -6,7 +6,7 @@
 #if !defined(POLY_CAL)
 #define POLY_CAL
 
-#define DEBUG_MAKE_POLY
+// #define DEBUG_MAKE_POLY
 #define DEBUG
 
 #define INIT_POLYARR_SIZE 100
@@ -29,6 +29,8 @@ double SolvePoly(pList);      // Solve the polynomial
 void DelPoly(pList);            // Delete the whole polynomial
 void EmptyPoly(pList);           // Make one polynomial empty
 void ChangePoly(pList);          // Make change to one node of one polynomial
+
+void PolyDiF(pList p);
 
 /* Basic Definition of the data structure of a polynomial*/
 struct polyNode {
