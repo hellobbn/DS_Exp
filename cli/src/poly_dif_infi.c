@@ -72,4 +72,47 @@ void PolyInfI(pList p) {
     printf("Enter the poly number: ");
     int choice;
     scanf("%d", &choice);
+
+    pPoly n = FindPoly(p, choice);
+    if(n) {
+        pPoly nPoly = NewListNode();
+        poly_infi(n, nPoly);
+        PrintPoly(nPoly);
+
+        printf("Do you want to save it? (y/N)");
+        char save = 'N';
+        scanf("%c", &save);
+        if(save == 'n' || save == 'N' || save == '\n') {
+            DestroyPoly(nPoly);
+        } else if(save == 'y' || save == 'Y') {
+            while(p->next != NULL) {
+                p = p->next;
+            }
+            p->next = nPoly;
+        } else {
+            printf("ERROR: Invalide Input, destroy the node...\n");
+            DestroyPoly(nPoly);
+        }
+    }
+}
+
+/* Do the actual infl */
+void poly_infi(pPoly in, pPoly out) {
+    pNode p = in->head;
+    while(p != NULL) {
+        pNode tmp = MakeNode();
+        tmp->freq = p->freq;
+        tmp->coff = p->coff;
+        if(tmp->freq == -1) {
+            /* We met a node whose infl is a ln 
+             * not going to change anything in this node.
+             */
+            tmp->lnpos = 1;
+        } else {
+            tmp->freq ++;
+            tmp->coff = tmp->coff / tmp->freq;
+        }
+        InsertNode(tmp, out);
+        p = p->next;
+    }
 }

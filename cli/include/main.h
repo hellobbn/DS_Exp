@@ -38,7 +38,7 @@ void PolyInfI(pList p);             // indefinite integral
 struct polyNode {
     double coff;
     int freq;
-    char lnFlag;
+    int lnpos;
     struct polyNode* next;
 };
 

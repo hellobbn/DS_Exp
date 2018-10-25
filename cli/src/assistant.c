@@ -21,6 +21,7 @@ pNode MakeNode(void) {
     p->coff = 0.0;
     p->freq = 0;
     p->next = NULL;
+    p->lnpos = 0;
     return p;
 }
  
@@ -55,7 +56,7 @@ void InsertNode(pNode node, pPoly polyHead) {
         pNode p = polyHead->head;
         int nodeFreq = node->freq;
         while(p != NULL) {
-            if(p->freq == nodeFreq) {
+            if(p->freq == nodeFreq && !(p->lnpos)) {
                 p->coff += node->coff;
                 /* In this situation, the node is note needed anymore*/
                 free(node);
@@ -83,7 +84,6 @@ void PrintPoly(pPoly p) {
     pNode nodePoint = p->head;
     int nItem = 0;
     int cnt = 0;
-
     while(nodePoint != NULL) {
         /* Print each node */
         if(nItem == 0) {
@@ -111,8 +111,19 @@ void PrintPoly(pPoly p) {
 }
 
 int PrintNode(pNode n) {
+    int hasLn = n->lnpos;
     double a = absF(n->coff);
     int b = n->freq;
+
+    /* It is a node to be printed out with Ln */
+    if(hasLn) {
+        if(absF(a - 1) < 10E3) {
+            printf("Ln(x)");
+        } else {
+            printf("%.2fLn", a);
+        }
+        return 0;
+    }
 
     /* Only print out things when a is not equal to 0 */
     if(a != 0) {

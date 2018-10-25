@@ -67,8 +67,6 @@ printf("%s: inputStr: %s\n status = %d\n", __func__, inputStr, status);
         if(status) {
             p->next = polytmp;
             p = p->next;
-        } else {
-            free(polytmp);
         }
 
 #ifdef DEBUG_MAKE_POLY

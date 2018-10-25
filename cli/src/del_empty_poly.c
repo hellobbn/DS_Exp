@@ -42,6 +42,7 @@ void DestroyPoly(pPoly p) {
         free(n);
         n = nnext;
     }
+    free(p);
 }
 
 void __empty_poly(pPoly p) {
