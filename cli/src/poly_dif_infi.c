@@ -4,7 +4,7 @@
 
 #include "main.h"
 #include "assistant.h" 
-#include "poly_dif.h"
+#include "poly_dif_infi.h"
 #include "common.h"
 #include "del_empty_poly.h"
 
@@ -64,4 +64,12 @@ void poly_dif(pPoly in, pPoly out, int n) {
         }
         InsertNode(tmp, out);
     }
+}
+
+void PolyInfI(pList p) {
+    printf("Printing out available polys: \n");
+    ShowList(p, 0);
+    printf("Enter the poly number: ");
+    int choice;
+    scanf("%d", &choice);
 }

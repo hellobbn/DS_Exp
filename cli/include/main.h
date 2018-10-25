@@ -20,22 +20,25 @@ typedef struct polyList* pList;         // A list of polynomial
 typedef struct polyList* pPoly;         // A head of a poly node
 
 
-pList NewListNode(void);        // Make a new node for the polyList
-void MakePoly(pList);           // Make a new polynomial
-void ShowList(pList, int);           // Display all polynomials
-pPoly AddPoly(pPoly, pPoly);       // Add two polynomials
-pPoly SubPoly(pPoly, pPoly);       // Sub two polynomials
-double SolvePoly(pList);      // Solve the polynomial
-void DelPoly(pList);            // Delete the whole polynomial
-void EmptyPoly(pList);           // Make one polynomial empty
-void ChangePoly(pList);          // Make change to one node of one polynomial
+pList NewListNode(void);            // Make a new node for the polyList
+void MakePoly(pList);               // Make a new polynomial
+void ShowList(pList, int);          // Display all polynomials
+pPoly AddPoly(pPoly, pPoly);        // Add two polynomials
+pPoly SubPoly(pPoly, pPoly);        // Sub two polynomials
+double SolvePoly(pList);            // Solve the polynomial
+void DelPoly(pList);                // Delete the whole polynomial
+void EmptyPoly(pList);              // Make one polynomial empty
+void ChangePoly(pList);             // Make change to one node of one polynomial
 
-void PolyDiF(pList p);
+void PolyDiF(pList p);              // Nth order differential function
+void PolyInfI(pList p);             // indefinite integral
+
 
 /* Basic Definition of the data structure of a polynomial*/
 struct polyNode {
     double coff;
     int freq;
+    char lnFlag;
     struct polyNode* next;
 };
 
