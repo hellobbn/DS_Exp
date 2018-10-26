@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 
-double __solve_node(pNode n, double x);
+double SolveNode(pNode n, double x);
 
-double SolvePoly(pList list) {
+void SolvePoly(pList list) {
     int choice = 0;
     double result = 0;
     double x = 0;
@@ -30,17 +30,24 @@ double SolvePoly(pList list) {
         while(pPoint != NULL) {
             if(pPoint->freq < 0 && x == 0) {
                 printf("ERROR: DEVIDE BY ZERO\n");
-                return 0;
+                printf("Press ENTER to continue.....");
+                flush_stdin();
+                getchar();
+                return;
             }
-            result += __solve_node(pPoint, x);
+            result += SolveNode(pPoint, x);
             pPoint = pPoint->next;
         }
     }
 
     printf("f(%.2lf) = %.2lf\n", x, result);
+
+    printf("Press ENTER to continue.....");
+    flush_stdin();
+    getchar();
 }
 
-double __solve_node(pNode n, double x) {
+double SolveNode(pNode n, double x) {
     double coff = n->coff;
     int freq = n->freq;
     return coff * PoW(x, freq);

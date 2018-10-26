@@ -20,7 +20,7 @@ void DelPoly(pList head) {
     pPoly p = FindPoly(head, choice - 1);
     pPoly tmp = p->next;
     p->next = tmp->next;
-    DestroyPoly(p);
+    DestroyPoly(tmp);
 }
 
 void EmptyPoly(pList head) {

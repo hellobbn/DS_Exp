@@ -15,3 +15,5 @@ pPoly FindPoly(pList p, int num);
 pNode FindNode(pPoly p, int freq);
 pNode FindPrevNode(pPoly p, int freq);
 int PrintNode(pNode n);
+int AllowNeg(pPoly p);
+void ClearScreen(void);

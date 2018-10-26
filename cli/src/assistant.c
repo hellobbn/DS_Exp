@@ -11,6 +11,7 @@ pList NewListNode(void) {
     pList listNode = malloc(sizeof(struct polyList));
     listNode->head = NULL;
     listNode->next = NULL;
+    listNode->coffLn = 0;
 
     return listNode;
 }
@@ -21,7 +22,6 @@ pNode MakeNode(void) {
     p->coff = 0.0;
     p->freq = 0;
     p->next = NULL;
-    p->lnpos = 0;
     return p;
 }
  
@@ -56,7 +56,7 @@ void InsertNode(pNode node, pPoly polyHead) {
         pNode p = polyHead->head;
         int nodeFreq = node->freq;
         while(p != NULL) {
-            if(p->freq == nodeFreq && !(p->lnpos)) {
+            if(p->freq == nodeFreq) {
                 p->coff += node->coff;
                 /* In this situation, the node is note needed anymore*/
                 free(node);
@@ -84,10 +84,25 @@ void PrintPoly(pPoly p) {
     pNode nodePoint = p->head;
     int nItem = 0;
     int cnt = 0;
+
+    double lnCoff = p->coffLn;
+    if(lnCoff) {
+        if(absF(lnCoff - 1) < 10E-3) {
+            printf("Ln(x) ");
+        } else if(absF(lnCoff + 1) < 10E-3) {
+            printf("-Ln(x) ");
+        } else {
+            printf("%.2fLn(x) ", lnCoff);
+        }
+        nItem ++;
+        cnt ++;
+    }
     while(nodePoint != NULL) {
         /* Print each node */
         if(nItem == 0) {
-            if(nodePoint->coff < 0) printf("-");
+            if(nodePoint->coff < 0)  {
+                printf("-");
+            }
             cnt += PrintNode(nodePoint);
         } else {
             /* if coff = 0, printNode() could handle it 
@@ -111,20 +126,8 @@ void PrintPoly(pPoly p) {
 }
 
 int PrintNode(pNode n) {
-    int hasLn = n->lnpos;
     double a = absF(n->coff);
     int b = n->freq;
-
-    /* It is a node to be printed out with Ln */
-    if(hasLn) {
-        if(absF(a - 1) < 10E3) {
-            printf("Ln(x)");
-        } else {
-            printf("%.2fLn", a);
-        }
-        return 0;
-    }
-
     /* Only print out things when a is not equal to 0 */
     if(a != 0) {
         if(b == 0) {
@@ -183,4 +186,19 @@ pNode FindPrevNode(pPoly p, int freq) {
         }
     }
     return NULL;
+}
+
+int AllowNeg(pPoly p) {
+    pNode n = p->head;
+    while(n != NULL) {
+        if(n->freq < 0) {
+            return 0;
+        }
+        n = n->next;
+    }
+    return 1;
+}
+
+void ClearScreen(void) {
+    system("clear");
 }

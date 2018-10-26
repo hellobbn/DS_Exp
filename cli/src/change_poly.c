@@ -40,7 +40,7 @@ void __change_poly(pPoly p) {
     printf("3. Change one node's property.\n");
     int choice;
     scanf("%d", &choice);
-
+    ClearScreen();
     switch (choice)
     {
         case 1:

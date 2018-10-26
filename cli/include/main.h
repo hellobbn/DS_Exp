@@ -25,26 +25,27 @@ void MakePoly(pList);               // Make a new polynomial
 void ShowList(pList, int);          // Display all polynomials
 pPoly AddPoly(pPoly, pPoly);        // Add two polynomials
 pPoly SubPoly(pPoly, pPoly);        // Sub two polynomials
-double SolvePoly(pList);            // Solve the polynomial
+void SolvePoly(pList);            // Solve the polynomial
 void DelPoly(pList);                // Delete the whole polynomial
 void EmptyPoly(pList);              // Make one polynomial empty
 void ChangePoly(pList);             // Make change to one node of one polynomial
 
 void PolyDiF(pList p);              // Nth order differential function
 void PolyInfI(pList p);             // indefinite integral
+void PolyDefI(pList p);             // Definite Integral
 
 
 /* Basic Definition of the data structure of a polynomial*/
 struct polyNode {
     double coff;
     int freq;
-    int lnpos;
     struct polyNode* next;
 };
 
 /* Basic Definition of the data structure of a list*/
 struct polyList {
     poly head;
+    double coffLn;                     // Ln's Coff
     struct polyList* next;
 };
 #endif // POLY_CAL

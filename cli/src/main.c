@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
     pList polyList = InitList();
     /* The choosing menu should run in a loop. */
     while(1) {
-
+        ClearScreen();
         /* Init the menu */
         printf("******** Simple Polynomial Calculator ********\n\n");
 
@@ -48,7 +48,8 @@ int main(int argc, char const *argv[])
         printf("7. Make a polynomial empty.\n");
         printf("8. Change one node of a polynomial.\n");
         printf("9. Poly differential\n");
-        printf("10. Indefinite integral");
+        printf("10. Indefinite integral\n");
+        printf("11. Definite Integral.\n");
 
         printf("\n\nEnter your choice: ");
 
@@ -58,13 +59,14 @@ int main(int argc, char const *argv[])
         scanf("%d", &choice);
 
         /* check if the input is valid */
-        if (!(choice >= 1 && choice <= 10)) {
+        if (!(choice >= 1 && choice <= 11)) {
             printf("Error: Invalid Input!");
             continue;
         }
 
         /* Do the requested Operation */
         DoOperation(choice, polyList);
+
     }
     return 0;
 }
@@ -120,6 +122,10 @@ int DoOperation(int num, pList head) {
         case 10:
             /* indefinite integral */
             PolyInfI(head);
+            break;
+        case 11:
+            /* Definite Integral */
+            PolyDefI(head);
             break;
         default:
             break;

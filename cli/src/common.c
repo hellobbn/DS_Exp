@@ -1,4 +1,5 @@
 #include "main.h"
+#include "assistant.h"
 #include "common.h"
 
 #include <stdlib.h>
@@ -52,7 +53,7 @@ double PoW(double x, int p) {
 }
 
 void GoodBye(int c) {
-    printf("%d", c);
     printf("\n\nMoriturus te saluto.\n\n");
+    ClearScreen();
     exit(0);
 }
