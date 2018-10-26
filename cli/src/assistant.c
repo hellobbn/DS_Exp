@@ -82,7 +82,6 @@ void InsertNode(pNode node, pPoly polyHead) {
 /* PrintPoly(): print out the poly */
 void PrintPoly(pPoly p) {
     pNode nodePoint = p->head;
-    int nItem = 0;
     int cnt = 0;
 
     double lnCoff = p->coffLn;
@@ -94,12 +93,11 @@ void PrintPoly(pPoly p) {
         } else {
             printf("%.2fLn(x) ", lnCoff);
         }
-        nItem ++;
         cnt ++;
     }
     while(nodePoint != NULL) {
         /* Print each node */
-        if(nItem == 0) {
+        if(cnt == 0) {
             if(nodePoint->coff < 0)  {
                 printf("-");
             }
@@ -117,7 +115,6 @@ void PrintPoly(pPoly p) {
             cnt += PrintNode(nodePoint);
         }
         nodePoint = nodePoint->next;
-        nItem ++;
     }
     if(cnt == 0) {
         printf("0");
@@ -201,4 +198,28 @@ int AllowNeg(pPoly p) {
 
 void ClearScreen(void) {
     system("clear");
+}
+
+pPoly CopyPoly(pPoly p) {
+    pPoly tmp = NewListNode();
+    pNode n = p->head;
+    while(n != NULL) {
+        pNode ntmp = MakeNode();
+        ntmp->coff = n->coff;
+        ntmp->freq = n->freq;
+        InsertNode(ntmp, tmp);
+    }
+    return tmp;
+}
+
+pNode FisrtNZFreq(pPoly p) {
+    pNode n = p->head;
+    while(n != NULL) {
+        if(n->coff == 0) {
+            n = n->next;
+        } else {
+            return n;
+        }
+    }
+    return NULL;
 }

@@ -17,3 +17,5 @@ pNode FindPrevNode(pPoly p, int freq);
 int PrintNode(pNode n);
 int AllowNeg(pPoly p);
 void ClearScreen(void);
+pPoly CopyPoly(pPoly p);
+pNode FisrtNZFreq(pPoly p);

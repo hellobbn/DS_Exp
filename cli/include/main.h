@@ -25,7 +25,7 @@ void MakePoly(pList);               // Make a new polynomial
 void ShowList(pList, int);          // Display all polynomials
 pPoly AddPoly(pPoly, pPoly);        // Add two polynomials
 pPoly SubPoly(pPoly, pPoly);        // Sub two polynomials
-void SolvePoly(pList);            // Solve the polynomial
+void SolvePoly(pList);              // Solve the polynomial
 void DelPoly(pList);                // Delete the whole polynomial
 void EmptyPoly(pList);              // Make one polynomial empty
 void ChangePoly(pList);             // Make change to one node of one polynomial
@@ -33,6 +33,8 @@ void ChangePoly(pList);             // Make change to one node of one polynomial
 void PolyDiF(pList p);              // Nth order differential function
 void PolyInfI(pList p);             // indefinite integral
 void PolyDefI(pList p);             // Definite Integral
+pPoly PolyMultip(pPoly polyA, pPoly polyB);     // Multiply 2 polys
+pPoly PolyDiv(pPoly polyA, pPoly polyB);        // Devide 2 polys
 
 
 /* Basic Definition of the data structure of a polynomial*/
