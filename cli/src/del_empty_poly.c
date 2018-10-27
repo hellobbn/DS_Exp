@@ -11,7 +11,7 @@
 
 void DelPoly(pList head) {
     int choice = 0;
-    printf("Printing out add available polys: ");
+    printf("Printing out add available polys: \n");
     ShowList(head, 0);
     printf("Enter the number of poly you want to delete: ");
     scanf("%d", &choice);

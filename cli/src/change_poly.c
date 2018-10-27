@@ -62,7 +62,6 @@ void __change_poly(pPoly p) {
     printf("All right, you've changed the poly to: \n");
     PrintPoly(p);
     printf("\nPress Enter to continue......\n");
-    flush_stdin();
     getchar();
 }
 

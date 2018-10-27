@@ -64,10 +64,11 @@ printf("%s: inputStr: %s\n status = %d\n", __func__, inputStr, status);
 
         /* Go to process the whole string when len != 0 */
         if(len) status = ProcessStr(inputStr, polytmp, len);
-        printf("\nThe Poly you entered is: \n");
-        PrintPoly(polytmp);
-        printf("\n");
+
         if(status) {
+            printf("\nThe Poly you entered is: \n");
+            PrintPoly(polytmp);
+            printf("\n");
             p->next = polytmp;
             p = p->next;
         }

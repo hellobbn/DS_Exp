@@ -82,7 +82,7 @@ void do_div(pPoly polyA, pPoly polyB, pPoly s) {
     if(j) {
         freqB = j->freq;
     } else {
-        PrintPoly(polyA);
+        printf("ERROR: b is zero!");
         return;
     }
     if(freqA < freqB) {

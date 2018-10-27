@@ -72,6 +72,9 @@ void PolyExpr(pList list) {
     }
     pPoly final = nPop(ndStack);
     PrintPoly(final);
+    printf("Press any key to continue.......");
+    flush_stdin();
+    getchar();
 }
 
 pPoly DoOpr(pPoly a, pPoly b, char opr) {

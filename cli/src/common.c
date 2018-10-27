@@ -75,7 +75,7 @@ int CmpOpr(char a, char b) {
     if(a == '(') {
         return 0;
     } else if(b == '(') {
-        return 1;
+        return 0;
     } 
     int c = TransOpr(a);
     int d = TransOpr(b);
