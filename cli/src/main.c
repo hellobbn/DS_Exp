@@ -49,10 +49,11 @@ int main(int argc, char const *argv[])
         printf("8.      Change one node of a polynomial.\n\n");
         printf("9. (f'(x)) Poly differential\n");
         printf("10.         Indefinite integral\n");
-        printf("11.         Definite Integral.\n");
+        printf("11.         Definite Integral.\n\n");
         printf("12. (a * b) Multiply two polys.\n");
-        printf("13. (a / b) Devide 2 polys\n");
-        printf("14. Poly calculator\n");
+        printf("13. (a^n)   power\n");
+        printf("14. (a / b) Devide 2 polys\n");
+        printf("15. Poly calculator\n");
 
         printf("\n\nEnter your choice: ");
 
@@ -62,7 +63,7 @@ int main(int argc, char const *argv[])
         scanf("%d", &choice);
 
         /* check if the input is valid */
-        if (!(choice >= 1 && choice <= 14)) {
+        if (!(choice >= 1 && choice <= 15)) {
             printf("Error: Invalid Input!");
             continue;
         }
@@ -135,10 +136,14 @@ int DoOperation(int num, pList head) {
             DisAndCall(PolyMultip, head);
             break;
         case 13:
+            /* poly n power */
+            PolyPow(head);
+            break;
+        case 14:
             /* Devide 2 polys */
             DisAndCall(PolyDiv, head);
             break;
-        case 14:
+        case 15:
             /* Poly expression */
             PolyExpr(head);
             break;

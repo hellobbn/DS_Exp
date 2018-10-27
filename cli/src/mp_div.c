@@ -32,6 +32,31 @@ pPoly PolyMultip(pPoly polyA, pPoly polyB) {
     return outPoly;
 }
 
+void PolyPow(pList p) {
+    printf("Enter the NO of poly to pow: \n");
+    ShowList(p, 0);
+    int choice;
+    int n;
+    scanf("%d", &choice);
+    pPoly pp = FindPoly(p, choice);
+    if(pp) {
+        printf("ENter n: ");
+        scanf("%d", &n);
+        pPoly tmp;
+        tmp = CopyPoly(pp);
+        for(int i = 1; i < n; ++ i) {
+            pPoly in = tmp;
+            tmp = PolyMultip(tmp, pp);
+            DestroyPoly(in);
+        }
+
+        PrintPoly(tmp);
+    }
+    printf("Press ENTER to continue.....");
+    flush_stdin();
+    getchar();
+}
+
 pPoly PolyDiv(pPoly polyA, pPoly polyB) {
     pPoly outPoly = NewListNode();
     do_div(polyA, polyB, outPoly);

@@ -208,6 +208,7 @@ pPoly CopyPoly(pPoly p) {
         ntmp->coff = n->coff;
         ntmp->freq = n->freq;
         InsertNode(ntmp, tmp);
+        n = n->next;
     }
     return tmp;
 }

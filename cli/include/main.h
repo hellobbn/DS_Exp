@@ -34,6 +34,7 @@ void PolyDiF(pList p);              // Nth order differential function
 void PolyInfI(pList p);             // indefinite integral
 void PolyDefI(pList p);             // Definite Integral
 pPoly PolyMultip(pPoly polyA, pPoly polyB);     // Multiply 2 polys
+void PolyPow(pList p);
 pPoly PolyDiv(pPoly polyA, pPoly polyB);        // Devide 2 polys
 void PolyExpr(pList list);                      // Resolve poly expr
 

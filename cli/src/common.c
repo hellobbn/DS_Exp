@@ -55,7 +55,6 @@ double PoW(double x, int p) {
 
 void GoodBye(int c) {
     printf("\n\nMoriturus te saluto.\n\n");
-    sleep(1);
     exit(0);
 }
 
