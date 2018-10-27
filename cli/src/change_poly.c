@@ -59,6 +59,11 @@ void __change_poly(pPoly p) {
             printf("ERROR: Invaild Input!!!\n");
             break;
     }
+    printf("All right, you've changed the poly to: \n");
+    PrintPoly(p);
+    printf("\nPress Enter to continue......\n");
+    flush_stdin();
+    getchar();
 }
 
 void change_insert_node(pPoly p) {
@@ -80,9 +85,6 @@ void change_insert_node(pPoly p) {
         pos ++;
     }
     ProcessStr(s, p, pos);
-
-    printf("All right, you've changed the poly to: \n");
-    PrintPoly(p);
 }
 
 void change_delete_node(pPoly p, int flag, int f) {
@@ -140,7 +142,4 @@ void change_change_node(pPoly p) {
         printf("ERROR: INPUT ERROR\n");
         printf("will NOT change the node\n");
     }
-    printf("the poly after that is ");
-    PrintPoly(p);
-    printf("\n");
 }

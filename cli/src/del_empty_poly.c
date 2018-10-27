@@ -21,17 +21,27 @@ void DelPoly(pList head) {
     pPoly tmp = p->next;
     p->next = tmp->next;
     DestroyPoly(tmp);
+    printf("\n\nNow the list is:\n");
+    ShowList(head, 0);
+    printf("Press ENTER to continue....");
+    flush_stdin();
+    getchar();
 }
 
 void EmptyPoly(pList head) {
     int choice = 0;
-    printf("Printing out add available polys: ");
+    printf("Printing out add available polys: \n");
     ShowList(head, 0);
     printf("Enter the number of poly you want to empty: ");
     scanf("%d", &choice);
 
     pPoly p = FindPoly(head, choice);
     __empty_poly(p);
+    printf("\n\nNow the list is:\n");
+    ShowList(head, 0);
+    printf("Press ENTER to continue....");
+    flush_stdin();
+    getchar();
 }
 
 void DestroyPoly(pPoly p) {

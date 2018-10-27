@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 double atoF(char* s, int len) {
     char* t = malloc(len + 1);
@@ -54,7 +55,7 @@ double PoW(double x, int p) {
 
 void GoodBye(int c) {
     printf("\n\nMoriturus te saluto.\n\n");
-    ClearScreen();
+    sleep(1);
     exit(0);
 }
 

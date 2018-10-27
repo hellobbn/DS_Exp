@@ -40,18 +40,18 @@ int main(int argc, char const *argv[])
 
         printf("Menu\n");
         printf("1. Make a polynomial.\n");
-        printf("2. Output all polynomial(s).\n");
-        printf("3. Add two polynomials.\n");
-        printf("4. Subtract two polynomials.\n");
-        printf("5. Calculate a polynomial (f(x)).\n");
-        printf("6. Destroy a polymonial.\n");
-        printf("7. Make a polynomial empty.\n");
-        printf("8. Change one node of a polynomial.\n");
-        printf("9. Poly differential\n");
-        printf("10. Indefinite integral\n");
-        printf("11. Definite Integral.\n");
-        printf("12. Multiply two polys.\n");
-        printf("13. Devide 2 polys\n");
+        printf("2. Output all polynomial(s).\n\n");
+        printf("3. (a + b) Add two polynomials.\n");
+        printf("4. (a - b) Subtract two polynomials.\n");
+        printf("5. (f(x))  Calculate a polynomial (f(x)).\n\n");
+        printf("6.      Destroy a polymonial.\n");
+        printf("7.      Make a polynomial empty.\n");
+        printf("8.      Change one node of a polynomial.\n\n");
+        printf("9. (f'(x)) Poly differential\n");
+        printf("10.         Indefinite integral\n");
+        printf("11.         Definite Integral.\n");
+        printf("12. (a * b) Multiply two polys.\n");
+        printf("13. (a / b) Devide 2 polys\n");
         printf("14. Poly calculator\n");
 
         printf("\n\nEnter your choice: ");
@@ -172,9 +172,9 @@ void DisAndCall(pPoly (*PolyOprFunc)(pPoly, pPoly), pList list) {
 #endif
     pPoly result = (*PolyOprFunc)(polyA, polyB);
     if(result) {
+        printf("\n");
         PrintPoly(result);
     } else {
-        printf("Some Error occurred! Quitting....");
         return;
     }
 

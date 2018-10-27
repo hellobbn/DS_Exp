@@ -142,7 +142,7 @@ void PolyDefI(pList p) {
             pPoly tmpPoly = NewListNode();
             poly_infi(n, tmpPoly);
             if(tmpPoly->coffLn && a <= 0) {
-                printf("ERROR: a not LEAGAL!\n");
+                printf("ERROR: a or b not LEAGAL!\n");
             // }else if(AllowNeg(tmpPoly) && (a <= 0 || b >= 0)) {
             //     printf("ERROR: a or b not allowed!\n");
             } else {

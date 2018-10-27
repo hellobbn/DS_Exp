@@ -35,8 +35,10 @@ pPoly PolyMultip(pPoly polyA, pPoly polyB) {
 pPoly PolyDiv(pPoly polyA, pPoly polyB) {
     pPoly outPoly = NewListNode();
     do_div(polyA, polyB, outPoly);
-
-    return outPoly;
+    printf("Press ENTER to continue......");
+    flush_stdin();
+    getchar();
+    return NULL;
 }
 
 void do_div(pPoly polyA, pPoly polyB, pPoly s) {
@@ -50,6 +52,8 @@ void do_div(pPoly polyA, pPoly polyB, pPoly s) {
         return;
     }
     pNode j = FisrtNZFreq(polyB);
+
+    /* b is not a poly */
     if(j) {
         freqB = j->freq;
     } else {
@@ -57,9 +61,9 @@ void do_div(pPoly polyA, pPoly polyB, pPoly s) {
         return;
     }
     if(freqA < freqB) {
+        printf("\n\n");
         printf("Left: ");
         PrintPoly(polyA);
-        printf("\n");
         printf("Poly: ");
         PrintPoly(s);
     } else {
