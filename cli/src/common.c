@@ -28,7 +28,7 @@ int atoI(char* s, int len) {
 }
 
 int IsOpr(char c) {
-    if(c == '+' || c == '*' || c == '/' || c == '-') {
+    if(c == '+' || c == '*' || c == '/' || c == '-' || c == '(' || c == ')') {
         return 1;
     }
 
@@ -56,4 +56,32 @@ void GoodBye(int c) {
     printf("\n\nMoriturus te saluto.\n\n");
     ClearScreen();
     exit(0);
+}
+
+int TransOpr(char c) {
+    if(c == '+' || c == '-') {
+        return 1;
+    } else if(c == '*' || c == '/') {
+        return 2;
+    } else if(c == '(') {
+        return 0;
+    } else if(c == ')') {
+        return 0;
+    }
+    return -1;
+}
+
+int CmpOpr(char a, char b) {
+    if(a == '(') {
+        return 0;
+    } else if(b == '(') {
+        return 1;
+    } 
+    int c = TransOpr(a);
+    int d = TransOpr(b);
+    if(c >= d) {
+        return 1;
+    } else {
+        return 0;
+    }
 }

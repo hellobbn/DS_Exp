@@ -35,6 +35,7 @@ void PolyInfI(pList p);             // indefinite integral
 void PolyDefI(pList p);             // Definite Integral
 pPoly PolyMultip(pPoly polyA, pPoly polyB);     // Multiply 2 polys
 pPoly PolyDiv(pPoly polyA, pPoly polyB);        // Devide 2 polys
+void PolyExpr(pList list);                      // Resolve poly expr
 
 
 /* Basic Definition of the data structure of a polynomial*/

@@ -15,6 +15,8 @@ int IsOpr(char c);
 double absF(double x);
 double PoW(double x, int p);
 void GoodBye(int i);
+int CmpOpr(char a, char b);
+int TransOpr(char c);
 
 #endif // COMMON_H
 

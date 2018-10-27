@@ -51,7 +51,8 @@ int main(int argc, char const *argv[])
         printf("10. Indefinite integral\n");
         printf("11. Definite Integral.\n");
         printf("12. Multiply two polys.\n");
-        printf("13. Devide 2 polys\b\n");
+        printf("13. Devide 2 polys\n");
+        printf("14. Poly calculator\n");
 
         printf("\n\nEnter your choice: ");
 
@@ -61,7 +62,7 @@ int main(int argc, char const *argv[])
         scanf("%d", &choice);
 
         /* check if the input is valid */
-        if (!(choice >= 1 && choice <= 13)) {
+        if (!(choice >= 1 && choice <= 14)) {
             printf("Error: Invalid Input!");
             continue;
         }
@@ -136,6 +137,10 @@ int DoOperation(int num, pList head) {
         case 13:
             /* Devide 2 polys */
             DisAndCall(PolyDiv, head);
+            break;
+        case 14:
+            /* Poly expression */
+            PolyExpr(head);
             break;
         default:
             break;
