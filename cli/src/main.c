@@ -1,5 +1,5 @@
 /* PolyCalculator
- * Version 1.0
+ * Version 2.0
  * Created by bbn(hellobbn)
  * Mail: clfbbn@gmail.com
  * All rights reserved
