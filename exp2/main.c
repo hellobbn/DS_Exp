@@ -30,8 +30,10 @@ int main(int argc, char const *argv[])
 
     /* Start process Input */
     int numLines = 0;
-    scanf("%d", numLines);
-
+    scanf("%d", &numLines);
+    getchar();
+    
+    int pointerPos = 0;
     int inputMode = 0;
     int commandNum = 0;
     while(commandNum < numLines) {
@@ -44,7 +46,7 @@ int main(int argc, char const *argv[])
             char c;
             int num = 0;
 
-            while((c = getchar) != '\n') {
+            while((c = getchar()) != '\n') {
                 Push(c, leftStack);
                 num ++;
             }
@@ -70,26 +72,22 @@ int main(int argc, char const *argv[])
             commandNum ++;
 
             /* Process the input */
-            int pointerPos = 0;
-            char* pos;
-            char* command = malloc(STR_LEN * sizeof(char));
-            pos = GetCommand(input, command);
-            int i = GetNum(pos);
+            int i = GetNum(input, len);
 
             /* Get the command */
-            if(command[0] == "I") {
+            if(input[0] == 'I') {
                 /* Insert */
                 inputMode = 1;
-            } else if(command[0] == 'G') {
+            } else if(input[0] == 'G') {
                 /* Get */
                 PrintRStack(leftStack);
                 PrintStack(rightStack);
-            } else if(command[0] == 'M') {
+            } else if(input[0] == 'M') {
                 /* Move */
                 char tmp;
 
                 int shift = i - pointerPos;
-                
+                pointerPos = i;
                 if(shift > 0) {
                     /* Shift right */ 
                     for(int k = 0; k < shift; ++ k) {
@@ -98,28 +96,31 @@ int main(int argc, char const *argv[])
                     }
                 } else {
                     /* Shift left */
+                    shift = -shift;
                     for(int k = 0; k < shift; ++ k) {
                         tmp = Pop(leftStack);
                         Push(tmp, rightStack);
                     }
                 }
-                pointerPos += i;
-            } else if(command[0] == 'D') {
+            } else if(input[0] == 'D') {
                 /* Delete */
                 for(int k = 0; k < i; ++ k) {
                     Pop(rightStack);
                 }
-            } else if(command[0] == 'N') {
+            } else if(input[0] == 'N') {
                 char tmp;
+                pointerPos ++;
                 tmp = Pop(rightStack);
                 Push(tmp, leftStack);
-            } else if(command[0] == 'P') {
+            } else if(input[0] == 'P') {
                 /* Prev */
                 char tmp;
+                pointerPos --;
                 tmp = Pop(leftStack);
                 Push(tmp, rightStack);
-            } else if(command[0] == 'R') {
+            } else if(input[0] == 'R') {
                 /* Rotate */
+                /* FIXME: NOT RIGHT!!!!! */
                 pStack tmpStack = InitStack();
                 char tmp;
                 for(int k = 0; k < i; ++ k) {
@@ -132,8 +133,57 @@ int main(int argc, char const *argv[])
                     Push(tmp, rightStack);
                 }
             }
+            printf("Pointerpos: %d\n", pointerPos);
+            printf("left: ");
+            PrintRStack(leftStack);
+            printf("\nright: ");
+            PrintStack(rightStack);
         }
     }
 
     return 0;
+}
+
+void PrintStack(pStack S) {
+    /* S is an empty node */
+    pStack p = S->next;
+    while(p) {
+        putchar(p->c);
+        p = p->next;
+    }
+    putchar('\n');
+}
+
+void PrintRStack(pStack S) {
+    char* tmp = malloc(STR_LEN * sizeof(char));
+    int len = 0;
+    pStack p = S->next;
+    while(p) {
+        tmp[len++] = p->c;
+        p = p->next;
+    }
+
+    for(int k = len - 1; k >= 0; k --) {
+        putchar(tmp[k]);
+    }
+}
+
+int GetNum(char* s, int len) {
+    char* p = s;
+    int t = 0;
+
+    int result;
+
+    char c = *p;
+    while(c > '9' || c < '0') {
+        t ++;
+        if(t == len) {
+            return 0;
+        }
+        p += 1;
+        c = *p;
+    }
+
+    result = atoi(p);
+    return result;
 }
