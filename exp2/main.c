@@ -31,11 +31,15 @@ int main(int argc, char const *argv[])
     /* Start process Input */
     int numLines = 0;
     scanf("%d", &numLines);
-    getchar();
+    char a;
+    while((a = getchar()) != EOF && a != '\n');
+    
     
     int pointerPos = 0;
     int inputMode = 0;
     int commandNum = 0;
+    int inputNum = 0;
+    int size = 0;
     while(commandNum < numLines) {
         if(inputMode) {
             /* In input mode:
@@ -46,11 +50,16 @@ int main(int argc, char const *argv[])
             char c;
             int num = 0;
 
-            while((c = getchar()) != '\n') {
+            while((c = getchar()) != '\n' && c != '\r' && c != EOF) {
+                if(num == inputNum) {
+                    break;
+                }
                 Push(c, leftStack);
                 num ++;
             }
-            
+            if(c == '\r') {
+                getchar();
+            }
             for(int j = num; j > 0; -- j) {
                 c = Pop(leftStack);
                 Push(c, rightStack);
@@ -63,9 +72,12 @@ int main(int argc, char const *argv[])
             char c;
             int len = 0;
             char* input = malloc(STR_LEN * sizeof(char));
-
-            while((c = getchar()) != '\n') {
+            
+            while((c = getchar()) != '\n' && c != '\r') {
                 input[len++] = c;
+            }
+            if(c == '\r') {
+                getchar();
             }
             input[len] = '\0';
 
@@ -78,9 +90,11 @@ int main(int argc, char const *argv[])
             if(input[0] == 'I') {
                 /* Insert */
                 inputMode = 1;
+                inputNum = i;
+                size += i;
             } else if(input[0] == 'G') {
                 /* Get */
-                PrintRStack(leftStack);
+                PrintRStack(leftStack, size);
                 PrintStack(rightStack);
             } else if(input[0] == 'M') {
                 /* Move */
@@ -121,23 +135,27 @@ int main(int argc, char const *argv[])
             } else if(input[0] == 'R') {
                 /* Rotate */
                 /* FIXME: NOT RIGHT!!!!! */
-                pStack tmpStack = InitStack();
-                char tmp;
+                int cnt = 0;
+                char t;
+                char* tmp = malloc(sizeof(char) * (i + 10));
                 for(int k = 0; k < i; ++ k) {
-                    tmp = Pop(rightStack);
-                    Push(tmp, tmpStack);
+                    t = Pop(rightStack);
+                    if(t == 0) {
+                        break;
+                    }
+                    tmp[cnt ++] = t;
                 }
 
-                for(int k = 0; k < i; ++ k) {
-                    tmp = Pop(tmpStack);
-                    Push(tmp, rightStack);
+                for(int k = 0; k < cnt; ++ k) {
+                    Push(tmp[k], rightStack);
                 }
             }
-            printf("Pointerpos: %d\n", pointerPos);
-            printf("left: ");
-            PrintRStack(leftStack);
-            printf("\nright: ");
-            PrintStack(rightStack);
+            // printf("Pointerpos: %d\n", pointerPos);
+            // printf("left: ");
+            // PrintRStack(leftStack);
+            // printf("\nright: ");
+            // PrintStack(rightStack);
+            free(input);
         }
     }
 
@@ -154,8 +172,8 @@ void PrintStack(pStack S) {
     putchar('\n');
 }
 
-void PrintRStack(pStack S) {
-    char* tmp = malloc(STR_LEN * sizeof(char));
+void PrintRStack(pStack S, int size) {
+    char* tmp = malloc(size * sizeof(char));
     int len = 0;
     pStack p = S->next;
     while(p) {
@@ -177,7 +195,7 @@ int GetNum(char* s, int len) {
     char c = *p;
     while(c > '9' || c < '0') {
         t ++;
-        if(t == len) {
+        if(t >= len) {
             return 0;
         }
         p += 1;

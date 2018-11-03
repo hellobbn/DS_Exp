@@ -20,7 +20,10 @@ void Push(char c, pStack S) {
 char Pop(pStack S) {
     char c;
     pStack p = S->next;
-    c = p->c;
+    if(p)
+        c = p->c;
+    else
+        return 0;
     S->next = p->next;
     free(p);
     return c;
