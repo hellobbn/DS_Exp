@@ -6,12 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Queue CreateQueue(int MaxElements) {
+Queue CreateQueue(void) {
     Queue q = malloc(sizeof(struct QueueRecord));
-    q->arr = malloc(sizeof(struct aPerson) * (MaxElements + 10));
-    q->capacity = MaxElements + 10;
-    q->front = 0;
-    q->rear = 0;
+    q->front = NULL;
+    q->rear = NULL;
     q->size = 0;
     return q;
 }
@@ -20,23 +18,20 @@ void Dequeue(Queue Q) {
     if(IsEmpty(Q)) {
         return;
     } else {
-        Q->front ++;
-        if(Q->front >= Q->capacity) {
-            Q->front = 0;
-        }
+        person p = Q->front;
+        Q->front = Q->front->next;
+        Q->size --;
+        free(p);
     }
-    Q->size --;
 }
 
 void Enqueue(person x, Queue Q) {
-    if(IsFull(Q)) {
-        return;
+    if(Q->size == 0) {
+        Q->front = x;
+        Q->rear = x->next;
     } else {
-        Q->arr[Q->rear] = x;
-        Q->rear ++;
-        if(Q->rear == Q->capacity) {
-            Q->rear = 0;
-        }
+        Q->rear = x;
+        Q->rear = Q->rear->next;
     }
     Q->size ++;
 }
@@ -45,21 +40,18 @@ person Front(Queue Q) {
     if(IsEmpty(Q)) {
         return NULL;
     } else {
-        int front = Q->front;
-        return Q->arr[front];
+        person fnt = Q->front;
+        return fnt;
     }
 }
 
 person FrontAndDequeue(Queue Q) {
-    person tmp = Front(Q);
-    Dequeue(Q);
-    return tmp;
+    person fnt = Q->front;
+    Q->front = Q->front->next;
+    Q->size --;
+    return fnt;
 }
 
 int IsEmpty(Queue Q) {
     return (Q->size == 0);
-}
-
-int IsFull(Queue Q) {
-    return (Q->size == Q->capacity);
 }
