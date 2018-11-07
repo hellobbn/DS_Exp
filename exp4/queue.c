@@ -22,16 +22,19 @@ void Dequeue(Queue Q) {
         Q->front = Q->front->next;
         Q->size --;
         free(p);
+        if(Q->front == NULL) {
+            Q->rear = NULL;
+        }
     }
 }
 
 void Enqueue(person x, Queue Q) {
     if(Q->size == 0) {
         Q->front = x;
-        Q->rear = x->next;
-    } else {
         Q->rear = x;
-        Q->rear = Q->rear->next;
+    } else {
+        Q->rear->next = x;
+        Q->rear = x;
     }
     Q->size ++;
 }
@@ -54,4 +57,15 @@ person FrontAndDequeue(Queue Q) {
 
 int IsEmpty(Queue Q) {
     return (Q->size == 0);
+}
+
+person FindPerson(Queue Q, int num) {
+    int cnt = 0;
+    person p = Q->front;
+    while(cnt < num) {
+        p = p->next;
+        cnt ++;
+    }
+
+    return p;
 }

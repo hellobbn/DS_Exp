@@ -2,6 +2,10 @@
  * main function
  * program entry
  */
+/* TODO: 
+ * 1. output averagetime
+ * 2. average_time = 0
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,10 +14,11 @@
 
 person CheckQueue(int total, Queue Q);
 void IncrTime(Queue Q);
+int FindInQueue(Queue Q, int total);
 
 int main(void) {
 
-    // fopen("/Users/bbn/Desktop/data/t4/in3.txt", "r", stdin);
+    // freopen("/Users/bbn/Desktop/data/t4/in5.txt", "r", stdin);
     /* Init variables */
     int people_num, total, close_time, average_time;        // global control 
     int* eve_time;                  // every person's waiting time
@@ -28,10 +33,11 @@ int main(void) {
 
     
     /* Init queues */
-    Queue firstQueue = CreateQueue(people_num);         // first queue
-    Queue secondQueue = CreateQueue(people_num);        // second queue
-    /* TODO: it should be an array */
-    Queue allPeople = CreateQueue(people_num);
+    Queue firstQueue = CreateQueue();         // first queue
+    Queue secondQueue = CreateQueue();        // second queue
+
+    /* it should be an array */
+    person* allPeople = malloc(sizeof(struct aPerson) * people_num);
 
     /* Init array */
     eve_time = malloc(sizeof(int) * people_num);
@@ -46,158 +52,162 @@ int main(void) {
         tmp->deps_money = money;
         tmp->time = enter_time;
         tmp->num = i + 1;
-        tmp->waiting_time = 0;
+        tmp->end = close_time;
+        tmp->next = NULL;
 
-        Enqueue(tmp, allPeople);
+        allPeople[i] = tmp;
     }
 
     /* While the bank is not closed -> continue to check people */
-    while(curr_time < close_time) {
+    while(curr_time < close_time || (process_time != 0 && process_time < average_time)) {
         // printf("curr_time = %d\n", curr_time);
-        if(people < allPeople->size) {
-            person tmp = allPeople->arr[people];
+        if(people < people_num) {
+            person tmp = allPeople[people];
             if(tmp->time == curr_time) {
-                // printf("En people %d to first queue.\n", people + 1);
+#ifdef DEBUG
+                printf("In time: %d En people %d to first queue.\n", curr_time, people + 1);
+#endif
                 Enqueue(tmp, firstQueue);
                 people ++;
             }
         }
 
         /* Increase the waiting time */
-
+        curr_time++;
+        // IncrTime(firstQueue);
+        // IncrTime(secondQueue);
 
         /* Process the first queue 
          * TODO: make this a function
          */
         if(first_open) {
             person top = Front(firstQueue);
-            if(top) {
-                if(process_time < average_time) process_time ++;
-                /* Check if it is ok */
-                int top_money = top->deps_money;
-                if(top_money > 0) {
-                    /* Let's do it! */
-                    if(process_time == average_time) {
-                        // printf("people %d in first queue: byebye. ", top->num);
-                        total += top_money;
-                        // printf("total = %d", total);
-                        top->waiting_time -= average_time;
-                        Dequeue(firstQueue);
-                        process_time = 0;
 
-                        /* Check the second queue 
-                        * TODO: make it as a function
-                        */
-                        int cnt = 0;
-                        int found = 0;
-                        int sz = secondQueue->size;
-                        while(!found) {
-                            if(cnt == sz) {
-                                break;
-                            }
-                            person scond_person = Front(secondQueue);
-                            if(scond_person->deps_money + total < 0) {
-                                /* NO! Go to the REAR! */
-                                scond_person = FrontAndDequeue(secondQueue);
-                                Enqueue(scond_person, secondQueue);
-                                cnt ++;
-                            } else {
-                                /* OK! Process it first! */
-                                // printf("Open second Queue\n");
-                                first_open = 0;
-                                second_open = 1;
-                                found = 1;
-                            }
-                        }
-                    }
-                } else {
-                    if(top_money + total < 0) {
-                        /* No! Go to the second */
-                        // printf("Move person %d to second queue.\n", top->num);
-                        process_time = 0;          // reset this time
+            /* Check if met */
+            if(top) {
+                if(top->deps_money + total < 0) {
+                    /* NOT MET! move to second queue */
+                    process_time = 0;
+                    FrontAndDequeue(firstQueue);
+                    Enqueue(top, secondQueue);
+                    curr_time --;
+#ifdef DEBUG
+                    printf("In time %d, person %d no money, go to queue 2\n", curr_time, top->num);
+#endif
+                    continue;
+                }
+
+                /* Process the man! */
+                if(process_time < average_time) process_time ++;
+
+                /* Check if it is ok */
+                if(process_time == average_time) {
+                    int top_money = top->deps_money;   
+                    
+                    if(top_money > 0) {
+                        /* 1. finish the operation */
+                        total += top_money;
+                        top->end = curr_time;
+                        top->end -= average_time;
                         FrontAndDequeue(firstQueue);
-                        Enqueue(top, secondQueue);
-                    } else {
-                        /* OK! Byebye! */
-                        if(process_time == average_time) {
-                            // printf("Goodbye, person %d! ", top->num);
-                            top->waiting_time -= average_time;
-                            total += top_money;
-                            // printf("total = %d", total);
-                            Dequeue(firstQueue);
-                            process_time = 0;
+                        process_time = 0;
+#ifdef DEBUG
+                        printf("In time %d, person %d out queue 1, depo: %d,money left: %d, check queue 2\n", curr_time, top->num, top->deps_money,total);
+#endif
+                        /* 2. check the second queue */
+                        int found = FindInQueue(secondQueue, total);
+                        if(found) {
+                            /* Go to the second queue */
+#ifdef CONFIG                            
+                            printf("Find in queue 2\n");
+#endif
+                            second_open = 1;
+                            first_open = 0;
                         }
+                    } else if(top_money + total >= 0) {
+                        /* Have a nice day! */
+
+                        total += top_money;
+                        top->end = curr_time;
+                        top->end -= average_time;
+                        FrontAndDequeue(firstQueue);
+#ifdef DEBUG
+                        printf("In time %d, person %d out queue 1, depo: %d,money left: %d\n", curr_time, top->num, top->deps_money,total);
+#endif
+                        process_time = 0;
                     }
                 }
             }
         } else if(second_open) {
+#ifdef DEBUG
+            printf("In time %d, Queue2 start.\n", curr_time);
+#endif
             /* The second top is ok */
             person top = Front(secondQueue);
+
+            /* Process the man! */
+            if(process_time < average_time) process_time ++;
+
             if(top) {
-                if(process_time < average_time) process_time ++;
                 if(process_time == average_time) {
                     /* OK! Byebye! */
                     total += top->deps_money;
-                    Dequeue(secondQueue);
-                    // printf("Byebye, person %d!\n", top->num);
-                    top->waiting_time -= average_time;
+                    top->end = curr_time;
+                    top->end -= average_time;
+                    FrontAndDequeue(secondQueue);
                     process_time = 0;
+#ifdef DEBUG
+                    printf("In time %d, person %d out queue 2, money left: %d, check queue 2\n", curr_time, top->num, total);
+#endif
                     /* Check again */
-                    int found = 0;
-                    int cnt = 0;
-                    int s = secondQueue->size;
-                    while(!found) {
-                        if(cnt == s) {
-                            break;
-                        }
-                        person scond_person = Front(secondQueue);
-                        if(scond_person->deps_money + total < 0) {
-                            /* NO! Go to the REAR! */
-                            FrontAndDequeue(secondQueue);
-                            Enqueue(scond_person, secondQueue);
-                            cnt ++;
-                            process_time = 0;
-                        } else {
-                            /* OK! Process it first! */
-                            first_open = 0;
-                            second_open = 1;
-                            found = 1;
-                            process_time = 0;
-                        }
-                    }
-
+                    int found = FindInQueue(secondQueue, total);
                     if(!found) {
-                        /* Go to the first queue */
                         first_open = 1;
                         second_open = 0;
+#ifdef DEBUG
+                        printf("not found in queue 2\n");
+#endif
                     }
                 }
             }
         }
         // printf("person2, waiting time: %d\n", allPeople->arr[1]->waiting_time);
         /* Update curr_time */
-        curr_time ++;
-        IncrTime(firstQueue);
-        IncrTime(secondQueue);
+        // curr_time ++;
+
     }
 
     /* Print out all */
-    int size = allPeople->size;
+    int size = people_num;
     for(int i = 0; i < size; ++ i) {
-        printf("%d\n", allPeople->arr[i]->waiting_time);
+        printf("%d\n", allPeople[i]->end - allPeople[i]->time);
     }
 }
 
-void IncrTime(Queue Q) {
-    int size = Q->size;
-    int fnt = Q->front;
-    person* a = Q->arr;
+// void IncrTime(Queue Q) {
+//     int size = Q->size;
+//     person fnt = Q->front;
+//     int cnt = 0;
+//     while(cnt < size) {
+//         fnt->waiting_time ++;
+//         fnt = fnt->next;
+//         cnt ++;
+//     }
+// }
 
-    for(int i = 0, cnt = 0; cnt < size; ++ i, ++ cnt) {
-        if(fnt + i == Q->capacity) {
-            fnt = 0;
-            i = 0;
+int FindInQueue(Queue Q, int total) {
+    int s = Q->size;
+    person fnt = Q->front;
+    int cnt = 0;
+
+    while(cnt < s) {
+        if(fnt->deps_money + total >= 0) {
+            return 1;
+        } else {
+            Enqueue(FrontAndDequeue(Q), Q);
+            fnt = Front(Q);
+            cnt ++;
         }
-        a[fnt + i]->waiting_time ++;
     }
+    return 0;
 }

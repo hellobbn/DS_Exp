@@ -19,6 +19,7 @@ person Front(Queue Q);
 void Dequeue(Queue Q);
 person FrontAndDequeue(Queue Q);
 void ExtendQueue(Queue Q);
+person FindPerson(Queue Q, int num);
 
 struct QueueRecord {
 	person front;
@@ -30,7 +31,7 @@ struct aPerson {
     int num;        // people's tag
     int time;       // entering time
     int deps_money;     // money to do with
-    int waiting_time;   // waiting time
+    int end;
     person next;
 };
 #endif // QUEUE_H
