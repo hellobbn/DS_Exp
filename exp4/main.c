@@ -1,213 +1,123 @@
 /* main.c
- * main function
- * program entry
- */
-/* TODO: 
- * 1. output averagetime
- * 2. average_time = 0
+ * program starts here
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+int minimum = 0;
+int row, colum;
+int** tmp;
+int** way;
 
-#include "queue.h"
-
-person CheckQueue(int total, Queue Q);
-void IncrTime(Queue Q);
-int FindInQueue(Queue Q, int total);
-
+void WayCpy(int len, int** in, int** dest);
+void TryWay(int** mis, int startx, int starty, int endx, int endy, int len, int** flag);
 int main(void) {
 
-    // freopen("/Users/bbn/Desktop/data/t4/in5.txt", "r", stdin);
-    /* Init variables */
-    int people_num, total, close_time, average_time;        // global control 
-    int* eve_time;                  // every person's waiting time
-    int people = 0;                 // how many people has in?
-    int curr_time = 0;              // the time
-    int first_open = 1;             // first window status
-    int second_open = 0;            // second window status
-    int process_time = 0;           // process time
+    scanf("%d %d", &row, &colum);
 
-    /* get variables */
-    scanf("%d %d %d %d", &people_num, &total, &close_time, &average_time);
+    int** mis = malloc(sizeof(int*) * row);
+    int** flag = malloc(sizeof(int*) * row);
 
+    tmp = malloc(sizeof(int*) * 2);
+    way = malloc(sizeof(int*) * 2);
+
+    for(int i = 0; i < 2; ++ i) {
+        tmp[i] = malloc(sizeof(int) * row * colum);
+        way[i] = malloc(sizeof(int) * row * colum);
+    }
+
+    for(int i = 0; i < row; ++ i) {
+        mis[i] = malloc(sizeof(int) * colum);
+        flag[i] = malloc(sizeof(int) * colum); 
+    }
+
+    for(int i = 0; i < row; ++ i) {
+        for(int j = 0; j < colum; ++ j) {
+            scanf("%d", &mis[i][j]);
+            flag[i][j] = 0;
+        }
+    } 
+
+    int startx, starty;
+    int endx, endy;
+    scanf("%d %d", &startx, &starty);
+    scanf("%d %d", &endx, &endy);
+
+    minimum = row * colum;
+    flag[startx][starty] = 1;
+    TryWay(mis, startx - 1, starty - 1, endx - 1, endy - 1, 0, flag);
     
-    /* Init queues */
-    Queue firstQueue = CreateQueue();         // first queue
-    Queue secondQueue = CreateQueue();        // second queue
-
-    /* it should be an array */
-    person* allPeople = malloc(sizeof(struct aPerson) * people_num);
-
-    /* Init array */
-    eve_time = malloc(sizeof(int) * people_num);
-
-    /* Read all people's property into the queue */ 
-    for(int i = 0; i < people_num; ++ i) {
-        int money;
-        int enter_time;
-
-        scanf("%d %d", &money, &enter_time);
-        person tmp = malloc(sizeof(struct aPerson));
-        tmp->deps_money = money;
-        tmp->time = enter_time;
-        tmp->num = i + 1;
-        tmp->end = close_time;
-        tmp->next = NULL;
-
-        allPeople[i] = tmp;
-    }
-
-    /* While the bank is not closed -> continue to check people */
-    while(curr_time < close_time || (process_time != 0 && process_time < average_time)) {
-        // printf("curr_time = %d\n", curr_time);
-        if(people < people_num) {
-            person tmp = allPeople[people];
-            if(tmp->time == curr_time) {
-#ifdef DEBUG
-                printf("In time: %d En people %d to first queue.\n", curr_time, people + 1);
-#endif
-                Enqueue(tmp, firstQueue);
-                people ++;
+    if(minimum) {
+        for(int i = 0; i <= minimum; ++ i) {
+            if(i != 0) {
+                printf("->");
             }
+            printf("(%d, %d)", way[0][i] + 1, way[1][i] + 1);
         }
-
-        /* Increase the waiting time */
-        curr_time++;
-        // IncrTime(firstQueue);
-        // IncrTime(secondQueue);
-
-        /* Process the first queue 
-         * TODO: make this a function
-         */
-        if(first_open) {
-            person top = Front(firstQueue);
-
-            /* Check if met */
-            if(top) {
-                if(top->deps_money + total < 0) {
-                    /* NOT MET! move to second queue */
-                    process_time = 0;
-                    FrontAndDequeue(firstQueue);
-                    Enqueue(top, secondQueue);
-                    curr_time --;
-#ifdef DEBUG
-                    printf("In time %d, person %d no money, go to queue 2\n", curr_time, top->num);
-#endif
-                    continue;
-                }
-
-                /* Process the man! */
-                if(process_time < average_time) process_time ++;
-
-                /* Check if it is ok */
-                if(process_time == average_time) {
-                    int top_money = top->deps_money;   
-                    
-                    if(top_money > 0) {
-                        /* 1. finish the operation */
-                        total += top_money;
-                        top->end = curr_time;
-                        top->end -= average_time;
-                        FrontAndDequeue(firstQueue);
-                        process_time = 0;
-#ifdef DEBUG
-                        printf("In time %d, person %d out queue 1, depo: %d,money left: %d, check queue 2\n", curr_time, top->num, top->deps_money,total);
-#endif
-                        /* 2. check the second queue */
-                        int found = FindInQueue(secondQueue, total);
-                        if(found) {
-                            /* Go to the second queue */
-#ifdef CONFIG                            
-                            printf("Find in queue 2\n");
-#endif
-                            second_open = 1;
-                            first_open = 0;
-                        }
-                    } else if(top_money + total >= 0) {
-                        /* Have a nice day! */
-
-                        total += top_money;
-                        top->end = curr_time;
-                        top->end -= average_time;
-                        FrontAndDequeue(firstQueue);
-#ifdef DEBUG
-                        printf("In time %d, person %d out queue 1, depo: %d,money left: %d\n", curr_time, top->num, top->deps_money,total);
-#endif
-                        process_time = 0;
-                    }
-                }
-            }
-        } else if(second_open) {
-#ifdef DEBUG
-            printf("In time %d, Queue2 start.\n", curr_time);
-#endif
-            /* The second top is ok */
-            person top = Front(secondQueue);
-
-            /* Process the man! */
-            if(process_time < average_time) process_time ++;
-
-            if(top) {
-                if(process_time == average_time) {
-                    /* OK! Byebye! */
-                    total += top->deps_money;
-                    top->end = curr_time;
-                    top->end -= average_time;
-                    FrontAndDequeue(secondQueue);
-                    process_time = 0;
-#ifdef DEBUG
-                    printf("In time %d, person %d out queue 2, money left: %d, check queue 2\n", curr_time, top->num, total);
-#endif
-                    /* Check again */
-                    int found = FindInQueue(secondQueue, total);
-                    if(!found) {
-                        first_open = 1;
-                        second_open = 0;
-#ifdef DEBUG
-                        printf("not found in queue 2\n");
-#endif
-                    }
-                }
-            }
-        }
-        // printf("person2, waiting time: %d\n", allPeople->arr[1]->waiting_time);
-        /* Update curr_time */
-        // curr_time ++;
-
-    }
-
-    /* Print out all */
-    int size = people_num;
-    for(int i = 0; i < size; ++ i) {
-        printf("%d\n", allPeople[i]->end - allPeople[i]->time);
     }
 }
 
-// void IncrTime(Queue Q) {
-//     int size = Q->size;
-//     person fnt = Q->front;
-//     int cnt = 0;
-//     while(cnt < size) {
-//         fnt->waiting_time ++;
-//         fnt = fnt->next;
-//         cnt ++;
-//     }
-// }
+void TryWay(int** mis, int startx, int starty, int endx, int endy, int len, int** flag) {
 
-int FindInQueue(Queue Q, int total) {
-    int s = Q->size;
-    person fnt = Q->front;
-    int cnt = 0;
+    tmp[0][len] = startx;
+    tmp[1][len] = starty;
 
-    while(cnt < s) {
-        if(fnt->deps_money + total >= 0) {
-            return 1;
-        } else {
-            Enqueue(FrontAndDequeue(Q), Q);
-            fnt = Front(Q);
-            cnt ++;
+    // we have reached the destination
+    if(startx == endx && starty == endy) {
+        // printf("(%d, %d): Reached!, len = %d\n", startx + 1, starty + 1, len);
+        if(len < minimum) {
+            minimum = len;
         }
+        WayCpy(len + 1, tmp, way);
     }
-    return 0;
+
+    // try other ways
+    if(startx != 0 && !flag[startx - 1][starty] && mis[startx - 1][starty] != 0) {
+        // try go up
+        // printf("(%d, %d): Up!\n", startx + 1, starty + 1);
+        flag[startx - 1][starty] = 1;
+        TryWay(mis, startx - 1, starty, endx, endy, len + 1, flag);
+        flag[startx - 1][starty] = 0;
+    } 
+    
+    if(startx != row - 1 && !flag[startx + 1][starty] && mis[startx + 1][starty] != 0) {
+        // try go down
+        // printf("(%d, %d): Down!\n", startx + 1, starty + 1);
+        flag[startx + 1][starty] = 1;
+        TryWay(mis, startx + 1, starty, endx, endy, len + 1, flag);
+        flag[startx + 1][starty] = 0;
+    }
+
+    if(starty != 0 && !flag[startx][starty - 1] && mis[startx][starty - 1] != 0) {
+        // try go left
+        // printf("(%d, %d): Left!\n", startx + 1, starty + 1);
+        flag[startx][starty - 1] = 1;
+        TryWay(mis, startx, starty - 1, endx, endy, len + 1, flag);
+        flag[startx][starty - 1] = 0;
+    }
+
+    if(starty != colum - 1 && !flag[startx][starty + 1] && mis[startx][starty + 1] != 0) {
+        // try go right
+        // printf("(%d, %d): Right!\n", startx + 1, starty + 1);
+        flag[startx][starty + 1] = 1;
+        TryWay(mis, startx, starty + 1, endx, endy, len + 1, flag);
+        flag[startx][starty + 1] = 0;
+    }
+
+    // fuck -> failed 
+    if(len == 0) {
+        minimum = 0;
+        printf("-1");
+    }
+    // clear the flag
+    
+    // printf("Going Back!\n");
 }
+
+void WayCpy(int len, int** in, int** dest) {
+    for(int i = 0; i < len; ++ i) {
+        dest[0][i] = in[0][i];
+        dest[1][i] = in[1][i];
+    }
+}
+
