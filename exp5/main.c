@@ -6,7 +6,7 @@
  * 1. output averagetime
  * 2. average_time = 0
  */
-
+// #define DEBUG
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,17 +21,23 @@ int main(void) {
     // freopen("/Users/bbn/Desktop/data/t4/in5.txt", "r", stdin);
     /* Init variables */
     int people_num, total, close_time, average_time;        // global control 
-    int* eve_time;                  // every person's waiting time
+    // int* eve_time;                  // every person's waiting time
     int people = 0;                 // how many people has in?
     int curr_time = 0;              // the time
     int first_open = 1;             // first window status
     int second_open = 0;            // second window status
     int process_time = 0;           // process time
+    int process_zero = 0;
 
     /* get variables */
     scanf("%d %d %d %d", &people_num, &total, &close_time, &average_time);
 
-    // if(average_time == 0) average_time = 1;
+    
+    if(average_time == 0) {
+        average_time = 1;
+        process_zero = 1;
+    }
+
     /* Init queues */
     Queue firstQueue = CreateQueue();         // first queue
     Queue secondQueue = CreateQueue();        // second queue
@@ -39,8 +45,8 @@ int main(void) {
     /* it should be an array */
     person* allPeople = malloc(sizeof(struct aPerson) * people_num);
 
-    /* Init array */
-    eve_time = malloc(sizeof(int) * people_num);
+    /* Init avetime */
+    int all_time = 0;
 
     /* Read all people's property into the queue */ 
     for(int i = 0; i < people_num; ++ i) {
@@ -98,10 +104,10 @@ int main(void) {
                 }
 
                 /* Process the man! */
-                if(process_time < average_time) process_time ++;
+                process_time ++;
 
                 /* Check if it is ok */
-                if(process_time == average_time) {
+                if(process_time >= average_time) {
                     int top_money = top->deps_money;   
                     
                     if(top_money > 0) {
@@ -146,14 +152,17 @@ int main(void) {
             person top = Front(secondQueue);
 
             /* Process the man! */
-            if(process_time < average_time) process_time ++;
+            process_time ++;
 
             if(top) {
-                if(process_time == average_time) {
+                if(process_time >= average_time) {
                     /* OK! Byebye! */
                     total += top->deps_money;
                     top->end = curr_time;
                     top->end -= average_time;
+                    if(process_zero) {
+                        top->end --;
+                    }
                     FrontAndDequeue(secondQueue);
                     process_time = 0;
 #ifdef DEBUG
@@ -178,10 +187,11 @@ int main(void) {
     }
 
     /* Print out all */
-    int size = people_num;
-    for(int i = 0; i < size; ++ i) {
+    for(int i = 0; i < people_num; ++ i) {
+        all_time += allPeople[i]->end - allPeople[i]->time;
         printf("%d\n", allPeople[i]->end - allPeople[i]->time);
     }
+    printf("%d", all_time/people_num);
 }
 
 // void IncrTime(Queue Q) {
