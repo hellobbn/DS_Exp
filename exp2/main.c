@@ -22,11 +22,11 @@ int main(int argc, char const *argv[])
     pStack rightStack = InitStack();
 
     /* See if we are going to input */
-    if(argc > 1) {
-        /* argc > 1, file argument spacified 
-         * TODO: Use argument argc[1] to process the file
-         */
-    }
+    // if(argc > 1) {
+    //     /* argc > 1, file argument spacified 
+    //      * TODO: Use argument argc[1] to process the file
+    //      */
+    // }
 
     /* Start process Input */
     int numLines = 0;
