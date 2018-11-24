@@ -61,8 +61,8 @@ struct HuffHeader {
 };
 
 /* Functions */
-void compress(char* name);
-void depress(char* name, char* out_name);
+void compress(const char* name);
+void depress(const char* name, const char* out_name);
 int my_cmp(const void* p, const void* q);
 HuffTree BuildTree(struct OriMapNode* array);
 void GenCode(MNode* Map, HuffTree root);
@@ -71,22 +71,14 @@ void __gen_code(MNode* Map, HuffTree T, unsigned char* code, int len);
 int main(int argc, char const *argv[]) {
     /* get command */
     // compress("1");
-    if(argc < 3) {
+    if(argc < 2) {
         printf("ERROR: Invalid Input!\n");
     } else {
-        if(argv[1][0] == '-') {
-            if(argv[1][1] == 'c') {
-                /* compress */
-                compress(argv[2]);
-            } else if(argv[1][1] == 'd') {
-                /* depress */
-                if(argc < 4) {
-                    printf("ERROR: Invalid Input\n");
-                }
-                depress(argv[2], argv[3]);
-            } else {
-                /* Invalid */
-            }
+        if(argc == 2) {
+            /* compress*/
+            compress(argv[1]);
+        } else if(argc == 3) {
+            depress(argv[1], argv[2]);
         } else {
             /* Invalid */
         }
@@ -99,7 +91,7 @@ int main(int argc, char const *argv[]) {
  * 3. construct huffman_tree
  * 4. use a header to indicate the number of bit
  */
-void compress(char* name) {
+void compress(const char* name) {
     FILE* fin;
     FILE* fout;
     char* ext = ".haff";
@@ -206,7 +198,7 @@ void compress(char* name) {
     //printf("%llu\n", header->code_len);
 }
 
-void depress(char* name, char* out_name) {
+void depress(const char* name, const char* out_name) {
     FILE* fin;
     FILE* fout;
 
