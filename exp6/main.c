@@ -203,6 +203,8 @@ void compress(const char* name) {
     fclose(fout);
 }
 
+/* Depress file
+ */
 void depress(const char* name, const char* out_name) {
     FILE* fin;
     FILE* fout;
