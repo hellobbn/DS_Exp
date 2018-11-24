@@ -199,6 +199,8 @@ void compress(const char* name) {
         fwrite(&tmp, sizeof(tmp), 1, fout);
     }
     //printf("%llu\n", header->code_len);
+    fclose(fin);
+    fclose(fout);
 }
 
 void depress(const char* name, const char* out_name) {
@@ -269,6 +271,8 @@ void depress(const char* name, const char* out_name) {
             }
         }
     }
+    fclose(fin);
+    fclose(fout);
 }
 
 int my_cmp(const void* p, const void* q) {
