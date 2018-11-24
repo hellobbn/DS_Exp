@@ -62,7 +62,7 @@ struct HuffHeader {
 
 /* Functions */
 void compress(char* name);
-void depress(char* name);
+void depress(char* name, char* out_name);
 int my_cmp(const void* p, const void* q);
 HuffTree BuildTree(struct OriMapNode* array);
 void GenCode(MNode* Map, HuffTree root);
@@ -70,8 +70,8 @@ void __gen_code(MNode* Map, HuffTree T, unsigned char* code, int len);
 
 int main(int argc, char const *argv[]) {
     /* get command */
-    // depress("out.huff");
-    if(argc != 3) {
+    // compress("1");
+    if(argc < 3) {
         printf("ERROR: Invalid Input!\n");
     } else {
         if(argv[1][0] == '-') {
@@ -80,7 +80,10 @@ int main(int argc, char const *argv[]) {
                 compress(argv[2]);
             } else if(argv[1][1] == 'd') {
                 /* depress */
-                depress(argv[2]);
+                if(argc < 4) {
+                    printf("ERROR: Invalid Input\n");
+                }
+                depress(argv[2], argv[3]);
             } else {
                 /* Invalid */
             }
@@ -99,10 +102,20 @@ int main(int argc, char const *argv[]) {
 void compress(char* name) {
     FILE* fin;
     FILE* fout;
+    char* ext = ".haff";
     unsigned char c;
     int i, j;
     fin = fopen(name, "r");
-    fout = fopen("out.huff", "w");
+    char* name_tmp = malloc(sizeof(name) * sizeof(char) + 10 * sizeof(char));
+    for(i = 0; i < sizeof(name); ++ i) {
+        name_tmp[i] = name[i];
+    }
+    for(j = 0; j < 5; ++ j) {
+        name_tmp[i + j] = ext[j];
+    }
+    name_tmp[i + j] = '\0';
+    printf("%s", name_tmp);
+    fout = fopen(name_tmp, "w");
     /* we assum a file can be very large */
     struct OriMapNode map[MAP_SIZE];                  // unsigned char has 0 - 255
 
@@ -190,16 +203,16 @@ void compress(char* name) {
     if(curr_bit != 0) {
         fwrite(&tmp, sizeof(tmp), 1, fout);
     }
-    printf("%llu\n", header->code_len);
+    //printf("%llu\n", header->code_len);
 }
 
-void depress(char* name) {
+void depress(char* name, char* out_name) {
     FILE* fin;
     FILE* fout;
 
 
     fin = fopen(name, "r");
-    fout = fopen("out.ori", "w");
+    fout = fopen(out_name, "w");
 
     /* Get the header */
     HHead header = malloc(sizeof(struct HuffHeader));
@@ -316,7 +329,7 @@ void __gen_code(MNode* Map, HuffTree T, unsigned char* code, int len) {
         // for(i = 0; i < len; ++ i) {
         //     printf("%d", code[i]);
         // }
-        printf("\n");
+        // printf("\n");
         for(i = 0; i < len; ++ i) {
             Map[T->c]->code[i] = code[i];
             Map[T->c]->length = len;
