@@ -94,19 +94,22 @@ int main(int argc, char const *argv[]) {
 void compress(const char* name) {
     FILE* fin;
     FILE* fout;
-    char* ext = ".haff";
+    int size = 0;
+    char* ext = ".huff";
     unsigned char c;
     int i, j;
     fin = fopen(name, "r");
-    char* name_tmp = malloc(sizeof(name) * sizeof(char) + 10 * sizeof(char));
-    for(i = 0; i < sizeof(name); ++ i) {
+
+    while(name[size] != '\0')   size ++;
+    char* name_tmp = malloc(size + 10 * sizeof(char));
+    for(i = 0; i < size; ++ i) {
         name_tmp[i] = name[i];
     }
     for(j = 0; j < 5; ++ j) {
         name_tmp[i + j] = ext[j];
     }
     name_tmp[i + j] = '\0';
-    printf("%s", name_tmp);
+    // printf("%s", name_tmp);
     fout = fopen(name_tmp, "w");
     /* we assum a file can be very large */
     struct OriMapNode map[MAP_SIZE];                  // unsigned char has 0 - 255
@@ -205,6 +208,11 @@ void depress(const char* name, const char* out_name) {
 
     fin = fopen(name, "r");
     fout = fopen(out_name, "w");
+
+    if(!fin) {
+        printf("ERROR: file Not found\n");
+        exit(1);
+    }
 
     /* Get the header */
     HHead header = malloc(sizeof(struct HuffHeader));
