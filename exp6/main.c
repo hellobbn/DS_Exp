@@ -70,7 +70,7 @@ void __gen_code(MNode* Map, HuffTree T, unsigned char* code, int len);
 
 int main(int argc, char const *argv[]) {
     /* get command */
-    // compress("1");
+    // depress("out.huff");
     if(argc != 3) {
         printf("ERROR: Invalid Input!\n");
     } else {
@@ -204,19 +204,57 @@ void depress(char* name) {
     /* Get the header */
     HHead header = malloc(sizeof(struct HuffHeader));
     fread(header, sizeof(struct HuffHeader), 1, fin);
-    printf("%llu", header->code_len);
-    return;
+
+    /* we have code->len 's char */
+    // printf("%llu", header->code_len);
+
     /* Construct the tree */
     HuffTree root = BuildTree(header->map);
+    // printf("%d", root->right->right->c);
 
     /* Gain all available bits */
+    uint64_t whole_char_num = header->code_len;
     unsigned char tmp = 0;
-    int curr_bit = 0;                           // current bit in tmp
-    uint64_t bitNum = 0;                        // bitNum
+    uint64_t char_num = 0;                       // we have now depressed 
+    int curr_bit_cnt = 0;                       // current bit count in tmp
+    int curr_bit = 0;                           // record the current bit
     TNode tmpNode = root;
+    unsigned char out = 0;
     while(!feof(fin)) {
         tmp = getc(fin);
+        // printf("tmp = %d\n", tmp);
 
+        while(char_num < whole_char_num) {
+            /* We have reached the char we need */
+            if(!(tmpNode->left)) {
+                out = tmpNode->c;
+                // printf("Dump %d\n", out);
+                if(char_num != whole_char_num - 1 || out != 255) {
+                    fwrite(&out, sizeof(out), 1, fout);
+                }
+
+                /* reset */
+                tmpNode = root;
+                char_num ++;
+                out = 0;
+                if(char_num == whole_char_num) {
+                    break;
+                }
+            }
+            if(((tmp) & (1 << (7 - curr_bit))) != 0) {
+                // printf("Get 1\n");
+                tmpNode = tmpNode->right;
+            } else {
+                // printf("Get 0\n");
+                //printf("The anser id %d\n", ((tmp) & (1 << (7 - curr_bit))));
+                tmpNode = tmpNode->left;
+            }
+            curr_bit ++;
+            if(curr_bit == 8) {
+                curr_bit = 0;
+                break;
+            }
+        }
     }
 }
 
@@ -274,10 +312,10 @@ void GenCode(MNode* Map, HuffTree root) {
 void __gen_code(MNode* Map, HuffTree T, unsigned char* code, int len) {
     int i;
     if(!(T->left) && !(T->right)) {
-        printf("Mark %d, Code: \n", T->c);
-        for(i = 0; i < len; ++ i) {
-            printf("%d", code[i]);
-        }
+        // printf("Mark %d, Code: \n", T->c);
+        // for(i = 0; i < len; ++ i) {
+        //     printf("%d", code[i]);
+        // }
         printf("\n");
         for(i = 0; i < len; ++ i) {
             Map[T->c]->code[i] = code[i];
