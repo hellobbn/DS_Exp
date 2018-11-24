@@ -125,6 +125,20 @@ int encode(const char* name) {
     struct huffman_node* tree = NULL;
     struct huffman_file_header fh;
 
+    int size = 0;
+    int i, j;
+    char* ext = ".huff";
+
+    for(size = 0; name[size] != '\0'; ++ size);
+    char* name_tmp = malloc(size + 10);
+    for(i = 0; i < size; ++ i) {
+        name_tmp[i] = name[i];
+    }
+    for(j = 0; j < 5; ++ j) {
+        name_tmp[i + j] = ext[j];
+    }
+    name_tmp[i + j] = '\0';
+
     ifp = fopen(name, "r");
 
     while(!feof(ifp)) {
@@ -156,7 +170,7 @@ int encode(const char* name) {
     clean_huffman_code_list();
     generate_huffman_code(tree);
 
-    ofp = fopen("out.he", "wb");
+    ofp = fopen(name_tmp, "wb");
 
     ZAP(&fh);
     memcpy(fh.magic, MAGIC, sizeof(MAGIC));
@@ -188,7 +202,7 @@ int encode(const char* name) {
 
 }
 
-int decode(const char* name) {
+int decode(const char* name, const char* out_name) {
     int ret = 0;
     int cached_c = 0, used_bits = 0;
     FILE *ifp, *ofp;
@@ -204,7 +218,7 @@ int decode(const char* name) {
 
     tree = build_huffman_tree(table, fh.table_size);
 
-    ofp = fopen("out.hd", "wb");
+    ofp = fopen(out_name, "wb");
     walk = tree;
     while(size < fh.file_size) {
         if(!used_bits) {
@@ -237,12 +251,10 @@ int decode(const char* name) {
 }
 
 int main(int argc, char* argv[]) {
-    if(argc < 3) {
-        // invaild argument
-    } else if(argv[1][0] == 'e') {
-        encode(argv[2]);
-    } else if(argv[1][0] == 'd') {
-        decode(argv[2]);
+    if(argc == 2) {
+        encode(argv[1]);
+    } else if(argc == 3) {
+        decode(argv[1], argv[2]);
     }
 
     return 0;
