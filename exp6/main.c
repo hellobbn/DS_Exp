@@ -18,8 +18,8 @@
  * 3. [compression] to write bit to a file in C, check 
  *                  https://stackoverflow.com/questions/13252697/writing-bits-to-a-file-in-c
  * 4. [compression] When a byte is read, use a linked list to save it
- * 5. [all] input format: ./huff -c file 
- *                        ./huff -d file
+ * 5. [all] input format: ./huff file                   -> compress: output will be `file.huff`
+ *                        ./huff file_in file_out       -> depress
  */
 
 /* main.c */
