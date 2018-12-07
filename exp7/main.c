@@ -3,7 +3,7 @@
  */
 
 /* FLAG */
-#define DEBUG_MAIN
+// #define DEBUG_MAIN
 // #define DEBUG_DFS 
 // #define DEBUG_BFS
 
@@ -31,7 +31,8 @@ void DFS(int** adjMatrix, int* Mark, int start, int point_num) {
     printf("Check point %d\n", start + 1);
     printf("Mark point %d\n", start + 1);
 #endif
-    printf("%d ", start + 1);
+
+    printf("%d", start + 1);
     Mark[start] = 1;
     for(i = 0; i < point_num; ++i) {
 
@@ -41,6 +42,7 @@ void DFS(int** adjMatrix, int* Mark, int start, int point_num) {
 
         if(adjMatrix[start][i]) {
             if(!Mark[i]) {
+                printf(" ");
                 DFS(adjMatrix, Mark, i, point_num);
             }
         }
@@ -64,6 +66,7 @@ void BFS(int** adjMatrix, int* map, int start, int point_num ) {
     int* inqueue = malloc(sizeof(int) * (point_num + 10));
     int sort_begin = 0;
     int sort_len = 0;
+    int check = 0;
     for(i = 0; i < point_num + 10; ++ i) {
         queue[i] = 0;
         inqueue[i] = 0;
@@ -76,7 +79,10 @@ void BFS(int** adjMatrix, int* map, int start, int point_num ) {
             map[curr_v] = 1;
             sort_begin = secqueue_end;
             sort_len = 0;
-            printf("%d ", curr_v + 1);
+            printf("%d", curr_v + 1);
+            if(++check < 5) {
+                printf(" ");
+            }
 #ifdef DEBUG_BFS
     printf("Mark %d\n", curr_v + 1);
 #endif            
@@ -103,6 +109,7 @@ void BFS(int** adjMatrix, int* map, int start, int point_num ) {
 
     }
     free(queue);
+    free(inqueue);
 }
 
 int main(int argc, char const *argv[])
@@ -143,6 +150,9 @@ int main(int argc, char const *argv[])
     }
     printf("===== DFS START HERE =====\n");
 #endif
+    for(i = 0; i < point_num; ++ i) {
+        mark[i] = 0;
+    }
     DFS(adjMatrix, mark, s - 1, point_num);
     printf("\n");
     for(i = 0; i < point_num; ++ i) {
@@ -152,6 +162,12 @@ int main(int argc, char const *argv[])
     printf("===== BFS START HERE =====\n");
 #endif
     BFS(adjMatrix, mark, s - 1, point_num);
+
+    for(i = 0; i < point_num; ++ i) {
+        free(adjMatrix[i]);
+    }
+    free(adjMatrix);
+    free(mark);
     return 0;
 
 }
