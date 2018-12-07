@@ -15,45 +15,42 @@ struct ENode {
     int a;
     int b;
     int weight;
-    pENode* nextarc;
 };
  
 struct VNode {
-    pENode* firstarc;
+    pENode firstarc;
     int num;
 };
 
-int has_route(int v1, int v2, pVNode* g);
-void add_e(int v, pVNode* g, pENode e) {
-    pVNode tmp = g[v];
-    pENode p = NULL;
-    if(tmp->firstarc) {
-        for(p = tmp->firstarc; p->nextarc; p = p->nextarc);
-        p->nextarc = e;
-    } else {
-        tmp->firstarc = e;
+int Find(int v, int* parent) {
+    while(v != parent[v]) {
+        v = parent[v];
     }
+    return v;
 }
+
 int my_cmp(const void* a, const void* b) {
     pENode p = *(pENode *)a;
     pENode q = *(pENode *)b;
 
-    if(p->weight > q->weight) {
+    int wp = p->weight;
+    int wq = q->weight;
+    if(wp > wq) {
         return 1;
-    } else if(p->weight == q->weight) {
+    } else if(wp == wq) {
         return 0;
     } else {
         return -1;
     }
 }
+
 void Kruscal(pENode* EList, int v_num, int e_num) {
-    int i, j;
+    int i;
     int result = 0;
-    pENode tmp;
 
     /* sort the list */
 #ifdef DEBUG_S1
-    printf("===== SORT START HERE =====");
+    printf("===== SORT START HERE =====\n");
 #endif
 
     qsort(EList, e_num, sizeof(pENode), my_cmp);
@@ -63,16 +60,14 @@ void Kruscal(pENode* EList, int v_num, int e_num) {
     for(i = 0; i < e_num; ++ i) {
         printf("%d \t", EList[i]->weight);
     }
-    printf("\n===== PRINT END HERE =====");
+    printf("\n===== PRINT END HERE =====\n");
 #endif
 
-    /* Init an empty graph */
-    pVNode* vertices = malloc(v_num * sizeof(pVNode));
-    for(i = 0; i < v_num; ++ i) {
-        vertices[i]->firstarc = NULL;
-        vertices[i]->num = i;
-    }
 
+    int* parent = malloc(sizeof(int) * v_num);
+    for( i = 0; i < v_num; ++ i) {
+        parent[i] = i;
+    }
     /* Find the e */
     int point;
     int p, q;
@@ -80,21 +75,26 @@ void Kruscal(pENode* EList, int v_num, int e_num) {
         pENode e = EList[point];
         p = e->a;
         q = e->b;
-        if(has_route(p, q, vertices)) {
-            point ++;
-            continue;
-        } else {
-            pENode en = NULL;
-            add_e(p, e, vertices);
-            add_e(q, e, vertices);
+        int pv1 = Find(p, parent);
+        int pv2 = Find(q, parent);
+
+#ifdef DEBUG_S1
+    printf("point %d, from %d to %d, weight = %d, parent[%d] = %d, parent[%d] = %d\n", point, p + 1, q + 1, e->weight ,p + 1, pv1 + 1, q + 1, pv2 + 1);
+#endif
+
+        if(pv1 != pv2) {
+            parent[pv2] = pv1;
+#ifdef DEBUG_S1
+    printf("parent[%d] set to %d, parent[%d] set to %d\n", p + 1, parent[p] + 1, q + 1, parent[q] + 1);
+#endif
             result += e->weight;
         }
     }
-
+    printf("%d", result);
+    free(parent);
 }
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     int v_num, e_num;
     int i;
     int a, b, w;
@@ -105,11 +105,12 @@ int main(int argc, char const *argv[])
         EList[i] = malloc(sizeof(struct ENode));
         pENode e = EList[i];
         scanf("%d %d %d", &a, &b, &w);
-        e->a = a;
-        e->b = b;
+        e->a = a - 1;
+        e->b = b - 1;
         e->weight = w;
     }
-
     Kruscal(EList, v_num, e_num);
+    
+    free(EList);
     return 0;
 }
