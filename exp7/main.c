@@ -26,13 +26,13 @@ void SortList(int* list, int len) {
 }
 void DFS(int** adjMatrix, int* Mark, int start, int point_num) {
     int i;
-
 #ifdef DEBUG_DFS
     printf("Check point %d\n", start + 1);
     printf("Mark point %d\n", start + 1);
 #endif
 
     printf("%d", start + 1);
+
     Mark[start] = 1;
     for(i = 0; i < point_num; ++i) {
 
@@ -56,14 +56,13 @@ void DFS(int** adjMatrix, int* Mark, int start, int point_num) {
 }
 
 void BFS(int** adjMatrix, int* map, int start, int point_num ) {
-    int queue_start = 0;
-    int queue_pointer = queue_start;
+    int queue_pointer = 0;
     int fqueue_end = 1;
     int secqueue_end = 1;
     int i;
     int curr_v = 0;
-    int* queue = malloc(sizeof(int) * (point_num + 10));
-    int* inqueue = malloc(sizeof(int) * (point_num + 10));
+    int* queue = malloc(sizeof(int) * (point_num + 100));
+    int* inqueue = malloc(sizeof(int) * (point_num + 100));
     int sort_begin = 0;
     int sort_len = 0;
     int check = 0;
@@ -80,9 +79,12 @@ void BFS(int** adjMatrix, int* map, int start, int point_num ) {
             sort_begin = secqueue_end;
             sort_len = 0;
             printf("%d", curr_v + 1);
-            if(++check < 5) {
+            if(++ check < point_num) {
                 printf(" ");
-            }
+            } else {
+            	queue_pointer = secqueue_end;
+            	break;
+			}
 #ifdef DEBUG_BFS
     printf("Mark %d\n", curr_v + 1);
 #endif            
@@ -162,7 +164,7 @@ int main(int argc, char const *argv[])
     printf("===== BFS START HERE =====\n");
 #endif
     BFS(adjMatrix, mark, s - 1, point_num);
-
+    printf("\n");
     for(i = 0; i < point_num; ++ i) {
         free(adjMatrix[i]);
     }
