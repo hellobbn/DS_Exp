@@ -7,12 +7,22 @@ struct node {
     struct node* next;
 };
 
+void free_point(node* v) {
+    if(v == NULL) {
+        return;
+    } else {
+        free_point(v->next);
+        free(v->next);
+    }
+}
 int main()
 {
     int n, m, x, y, i, j, k, p, start, destin;
-    node ** vert;
-    node * q;
-    int * dis; int * tag;
+    node** vert;
+    node* q;
+    node* tmp;
+    int* dis; 
+	int* tag;
     scanf("%d %d", &n, &m);
     vert = malloc(sizeof(node *) * n);
     for (i = 0; i < n; i++) vert[i] = NULL;
@@ -22,38 +32,58 @@ int main()
         x -= 1; y -= 1;
         if (vert[x] == NULL)
         {
-            vert[x] = malloc(sizeof(node*));
-            vert[x]->number = y;
-            vert[x]->distance = k;
-            vert[x]->next = NULL;
+            tmp = malloc(sizeof(node));
+            if(!tmp) {
+            	printf("ERROR\n");
+            	return 1;
+			}
+            tmp->number = y;
+            tmp->distance = k;
+            tmp->next = NULL;
+            vert[x] = tmp;
         }
         else
         {
             q = vert[x];
             while (q->next != NULL) q = q->next;
-            q->next = malloc(sizeof(node*));
-            q->next->number = y;
-            q->next->distance = k;
-            q->next->next = NULL;
+            tmp = malloc(sizeof(node));
+            if(!tmp) {
+            	printf("ERROR\n");
+            	return 1;
+			}
+            tmp->number = y;
+            tmp->distance = k;
+            tmp->next = NULL;
+            q->next = tmp;
         }
         if (vert[y] == NULL)
         {
-            vert[y] = malloc(sizeof(node*));
-            vert[y]->number = x;
-            vert[y]->distance = k;
-            vert[y]->next = NULL;
+            tmp = malloc(sizeof(node));
+            if(!tmp) {
+            	printf("ERROR\n");
+            	return 1;
+			}
+            tmp->number = x;
+            tmp->distance = k;
+            tmp->next = NULL;
+            vert[y] = tmp;
         }
         else
         {
             q = vert[y];
             while (q->next != NULL) q = q->next;
-            q->next = malloc(sizeof(node*));
-            q->next->number = x;
-            q->next->distance = k;
-            q->next->next = NULL;
+            tmp = malloc(sizeof(node));
+            if(!tmp) {
+            	printf("ERROR\n");
+            	return 1;
+			}
+            tmp->number = x;
+            tmp->distance = k;
+            tmp->next = NULL;
+            q->next = tmp;
         }
     }
-
+	
     scanf("%d %d", &start, &destin);
     start -= 1; destin -= 1;
     dis = malloc(sizeof(int) * n);
@@ -91,5 +121,11 @@ int main()
         }
     }
     printf("%d", dis[destin]);
+    for(i = 0; i < n; ++ i) {
+
+    }
+    free(vert);
+    free(dis);
+    free(tag);
     return 0;
 }
