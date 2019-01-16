@@ -70,6 +70,6 @@ int main()
         fail_sum += f[i];
     }
 
-    printf("\nAverage Success: %.2lf, Average False: %.2lf", succ_sum / n, fail_sum / m);
+    printf("\nAverage Success: %.2lf, Average False: %.2lf\n\n", succ_sum / n, fail_sum / m);
     return 0;
 }

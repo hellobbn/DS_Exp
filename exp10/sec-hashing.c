@@ -23,9 +23,6 @@ int main(void) {
     int i;
     scanf("%d", &num_size);
 
-    
-
-
     int key;
     int* key_saver = malloc(sizeof(int) * num_size);
 
@@ -116,5 +113,5 @@ int main(void) {
     }
 
 
-    printf("Ava: Success: %lf, \t Fail: %lf", success_sum, fail_sum);
+    printf("Ava: Success: %lf, \t Fail: %lf\n\n", success_sum / num_size, fail_sum / mod_set);
 }
