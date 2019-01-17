@@ -134,7 +134,6 @@ int main(int argc, char const *argv[])
                 Push(tmp, rightStack);
             } else if(input[0] == 'R') {
                 /* Rotate */
-                /* FIXME: NOT RIGHT!!!!! */
                 int cnt = 0;
                 char t;
                 char* tmp = malloc(sizeof(char) * (i + 10));

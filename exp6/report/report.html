@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>实验 3: 用huffman压缩技术实现对任意文件的压缩和解压缩处理</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+        <style>
+/*--------------------------------------------------------------------------------------------- * Copyright (c) Microsoft Corporation. All rights reserved. * Licensed under the MIT License. See License.txt in the project root for license information. *--------------------------------------------------------------------------------------------*/ body { font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback"; font-size: 14px; padding: 0 26px; line-height: 22px; word-wrap: break-word; } #code-csp-warning { position: fixed; top: 0; right: 0; color: white; margin: 16px; text-align: center; font-size: 12px; font-family: sans-serif; background-color:#444444; cursor: pointer; padding: 6px; box-shadow: 1px 1px 1px rgba(0,0,0,.25); } #code-csp-warning:hover { text-decoration: none; background-color:#007acc; box-shadow: 2px 2px 2px rgba(0,0,0,.25); } body.scrollBeyondLastLine { margin-bottom: calc(100vh - 22px); } body.showEditorSelection .code-line { position: relative; } body.showEditorSelection .code-active-line:before, body.showEditorSelection .code-line:hover:before { content: ""; display: block; position: absolute; top: 0; left: -12px; height: 100%; } body.showEditorSelection li.code-active-line:before, body.showEditorSelection li.code-line:hover:before { left: -30px; } .vscode-light.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(0, 0, 0, 0.15); } .vscode-light.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(0, 0, 0, 0.40); } .vscode-light.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-dark.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 255, 255, 0.4); } .vscode-dark.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 255, 255, 0.60); } .vscode-dark.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-high-contrast.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 160, 0, 0.7); } .vscode-high-contrast.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 160, 0, 1); } .vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before { border-left: none; } img { max-width: 100%; max-height: 100%; } a { text-decoration: none; } a:hover { text-decoration: underline; } a:focus, input:focus, select:focus, textarea:focus { outline: 1px solid -webkit-focus-ring-color; outline-offset: -1px; } hr { border: 0; height: 2px; border-bottom: 2px solid; } h1 { padding-bottom: 0.3em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; } h1, h2, h3 { font-weight: normal; } h1 code, h2 code, h3 code, h4 code, h5 code, h6 code { font-size: inherit; line-height: auto; } table { border-collapse: collapse; } table > thead > tr > th { text-align: left; border-bottom: 1px solid; } table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td { padding: 5px 10px; } table > tbody > tr + tr > td { border-top: 1px solid; } blockquote { margin: 0 7px 0 5px; padding: 0 16px 0 10px; border-left-width: 5px; border-left-style: solid; } code { font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback"; font-size: 14px; line-height: 19px; } body.wordWrap pre { white-space: pre-wrap; } .mac code { font-size: 12px; line-height: 18px; } pre:not(.hljs), pre.hljs code > div { padding: 16px; border-radius: 3px; overflow: auto; } /** Theming */ pre code { color: var(--vscode-editor-foreground); } .vscode-light pre { background-color: rgba(220, 220, 220, 0.4); } .vscode-dark pre { background-color: rgba(10, 10, 10, 0.4); } .vscode-high-contrast pre { background-color: rgb(0, 0, 0); } .vscode-high-contrast h1 { border-color: rgb(0, 0, 0); } .vscode-light table > thead > tr > th { border-color: rgba(0, 0, 0, 0.69); } .vscode-dark table > thead > tr > th { border-color: rgba(255, 255, 255, 0.69); } .vscode-light h1, .vscode-light hr, .vscode-light table > tbody > tr + tr > td { border-color: rgba(0, 0, 0, 0.18); } .vscode-dark h1, .vscode-dark hr, .vscode-dark table > tbody > tr + tr > td { border-color: rgba(255, 255, 255, 0.18); } 
+</style>
+<style>
+/* https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs2015.css */ /* * Visual Studio 2015 dark style * Author: Nicolas LLOBERA <nllobera@gmail.com> */ .hljs-keyword, .hljs-literal, .hljs-symbol, .hljs-name { color: #569CD6; } .hljs-link { color: #569CD6; text-decoration: underline; } .hljs-built_in, .hljs-type { color: #4EC9B0; } .hljs-number, .hljs-class { color: #B8D7A3; } .hljs-string, .hljs-meta-string { color: #D69D85; } .hljs-regexp, .hljs-template-tag { color: #9A5334; } .hljs-subst, .hljs-function, .hljs-title, .hljs-params, .hljs-formula { color: #DCDCDC; } .hljs-comment, .hljs-quote { color: #57A64A; font-style: italic; } .hljs-doctag { color: #608B4E; } .hljs-meta, .hljs-meta-keyword, .hljs-tag { color: #9B9B9B; } .hljs-variable, .hljs-template-variable { color: #BD63C5; } .hljs-attr, .hljs-attribute, .hljs-builtin-name { color: #9CDCFE; } .hljs-section { color: gold; } .hljs-emphasis { font-style: italic; } .hljs-strong { font-weight: bold; } /*.hljs-code { font-family:'Monospace'; }*/ .hljs-bullet, .hljs-selector-tag, .hljs-selector-id, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo { color: #D7BA7D; } .hljs-addition { background-color: #144212; display: inline-block; width: 100%; } .hljs-deletion { background-color: #600; display: inline-block; width: 100%; } /* From https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs.css */ /* Visual Studio-like style based on original C# coloring by Jason Diamond <jason@diamond.name> */ .vscode-light .hljs-function, .vscode-light .hljs-params { color: inherit; } .vscode-light .hljs-comment, .vscode-light .hljs-quote, .vscode-light .hljs-variable { color: #008000; } .vscode-light .hljs-keyword, .vscode-light .hljs-selector-tag, .vscode-light .hljs-built_in, .vscode-light .hljs-name, .vscode-light .hljs-tag { color: #00f; } .vscode-light .hljs-string, .vscode-light .hljs-title, .vscode-light .hljs-section, .vscode-light .hljs-attribute, .vscode-light .hljs-literal, .vscode-light .hljs-template-tag, .vscode-light .hljs-template-variable, .vscode-light .hljs-type, .vscode-light .hljs-addition { color: #a31515; } .vscode-light .hljs-deletion, .vscode-light .hljs-selector-attr, .vscode-light .hljs-selector-pseudo, .vscode-light .hljs-meta { color: #2b91af; } .vscode-light .hljs-doctag { color: #808080; } .vscode-light .hljs-attr { color: #f00; } .vscode-light .hljs-symbol, .vscode-light .hljs-bullet, .vscode-light .hljs-link { color: #00b0e8; } .vscode-light .hljs-emphasis { font-style: italic; } .vscode-light .hljs-strong { font-weight: bold; }
+</style>
+<style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'HelveticaNeue-Light', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <h1 id="%E5%AE%9E%E9%AA%8C-3-%E7%94%A8huffman%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0%E5%AF%B9%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E5%92%8C%E8%A7%A3%E5%8E%8B%E7%BC%A9%E5%A4%84%E7%90%86">实验 3: 用huffman压缩技术实现对任意文件的压缩和解压缩处理</h1>
+<h2 id="1-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0">1. 问题描述</h2>
+<p>要求对所有的文件类型进行压缩，压缩之后的文件后缀名为huff。同时，可以对所有后缀名为huff的压缩文件进行解压缩。</p>
+<ol>
+<li>题目2中以1个字节(8bit)为单位进行huffman编码</li>
+<li>对任意文件进行压缩后可以输出一个后缀名为huff的单文件，并且可以对任意一个后缀名为huff的单文件进行解压还原出原文件。</li>
+<li>群内将提供10不同种类的文件包括文档、图片、视频、可执行文件等进行压缩测试，要求可以完成压缩和解压的步骤，并且解压出来的文件没有任何损失。</li>
+</ol>
+<p><strong>输入要求</strong>:
+假定文件名为 <code>huff</code>, 则若 <code>argc</code> 为2， 即 <code>./huff xxx</code> 则为 压缩，若 <code>argc</code> 为 3， 即 <code>./huff xxx.huff xxx</code>, 即为 解压缩</p>
+<h2 id="2-%E7%AE%97%E6%B3%95%E7%9A%84%E6%8F%8F%E8%BF%B0">2. 算法的描述</h2>
+<h3 id="21-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E6%8F%8F%E8%BF%B0">2.1 数据结构的描述</h3>
+<p><strong>a. 压缩</strong> 压缩出的文件名为 <code>输入的文件名.huff</code>, 使用一个 Map 对 0-255 的 ascii 码进行处理:</p>
+<pre><code class="language-c"><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">OriMapNode</span> <span class="hljs-title">map</span>[<span class="hljs-title">MAP_SIZE</span>];</span>
+</div></code></pre>
+<p>使用 <code>qsort()</code> 对该 <code>map</code> 进行排序后，使用 <code>BuildTree</code> 建立一个 Huffman Tree，然后建立新的 <code>map</code> 数组 <code>CodeMap</code>, 它的每个元素都是 <code>struct MapNode</code>, 包含了 <code>code</code> 和 <code>code</code> 的长度 <code>length</code>. 调用 <code>GenCode()</code> 对 <code>CodeMap</code> 里的每个元素生成对应的哈夫曼编码。HTree 顶部的 <code>weight</code> 即为整个 Huffman Tree 的总长度。我们使用一个头(Header) 存储这些信息，然后对每个源文件中的字节，在 CodeMap 中找到相应的编码，并写入文件中，完成写入。</p>
+<p><strong>b. 解压缩</strong> 程序起先读取文件中预置的头(Header), 然后使用 header 中自带的 map 重建 Huffman Tree，然后对每个 bit，在 Huffman Tree 中进行查找，最后找到相应的原文件的 byte，并写入原文件。</p>
+<h3 id="22-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E7%9A%84%E6%8F%8F%E8%BF%B0">2.2 程序结构的描述</h3>
+<p><code>main.c</code> 中主要的函数有:</p>
+<ul>
+<li><code>main()</code> 处理输入，确定是解压缩还是压缩</li>
+<li><code>compress()</code> 压缩文件</li>
+<li><code>depress()</code> 解压缩文件</li>
+<li><code>my_cmp()</code> <code>qsort()</code> 的比较函数</li>
+<li><code>BuildTree()</code> 建立 Huffman Tree</li>
+<li><code>GenCode()</code> 生成 Huffman Code</li>
+<li><code>__gen_code()</code> 由 <code>GenCode()</code> 调用，递归地生成代码</li>
+</ul>
+<h2 id="3-%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90">3. 调试分析</h2>
+<p>本程序的调试主要通过手写和使用 hex editor 来查看压缩完成的文件来判断算法是否正确</p>
+<h2 id="4-%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A%E5%92%8C%E6%94%B6%E8%8E%B7">4. 实验体会和收获</h2>
+<p>这是我第一次写使用位操作来 1 个 bit 1 个 bit 处理文件的程序，从原来的不熟悉到后来的越写越顺，进一步深化了对 HUffman Tree 的认识。</p>
+
+    </body>
+    </html>

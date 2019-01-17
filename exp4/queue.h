@@ -27,6 +27,6 @@ struct aQueue {
 struct QueueNode {
     int x, y;
     struct QueueNode* next;
-    struct QueueNode* ances
+    struct QueueNode* ances;
 };
 #endif // QUEUE_H

@@ -10,8 +10,8 @@ int main()
         scanf("%d", &d[i]);
     scanf("%d", &m);
     h = malloc(sizeof(int) * m);
-    s = malloc(sizeof(int) * m);
-    f = malloc(sizeof(int) * m);
+    s = malloc(sizeof(int) * m);        // success
+    f = malloc(sizeof(int) * m);        // fail
     for (i = 0; i < m; i++) s[i] = 0;
     for (i = 0; i < m; i++) h[i] = -1;
     for (i = 0; i < n; i++)

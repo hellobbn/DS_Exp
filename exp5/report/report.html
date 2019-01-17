@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>实验 2-4: 银行业务模拟</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+        <style>
+/*--------------------------------------------------------------------------------------------- * Copyright (c) Microsoft Corporation. All rights reserved. * Licensed under the MIT License. See License.txt in the project root for license information. *--------------------------------------------------------------------------------------------*/ body { font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback"; font-size: 14px; padding: 0 26px; line-height: 22px; word-wrap: break-word; } #code-csp-warning { position: fixed; top: 0; right: 0; color: white; margin: 16px; text-align: center; font-size: 12px; font-family: sans-serif; background-color:#444444; cursor: pointer; padding: 6px; box-shadow: 1px 1px 1px rgba(0,0,0,.25); } #code-csp-warning:hover { text-decoration: none; background-color:#007acc; box-shadow: 2px 2px 2px rgba(0,0,0,.25); } body.scrollBeyondLastLine { margin-bottom: calc(100vh - 22px); } body.showEditorSelection .code-line { position: relative; } body.showEditorSelection .code-active-line:before, body.showEditorSelection .code-line:hover:before { content: ""; display: block; position: absolute; top: 0; left: -12px; height: 100%; } body.showEditorSelection li.code-active-line:before, body.showEditorSelection li.code-line:hover:before { left: -30px; } .vscode-light.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(0, 0, 0, 0.15); } .vscode-light.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(0, 0, 0, 0.40); } .vscode-light.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-dark.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 255, 255, 0.4); } .vscode-dark.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 255, 255, 0.60); } .vscode-dark.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-high-contrast.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 160, 0, 0.7); } .vscode-high-contrast.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 160, 0, 1); } .vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before { border-left: none; } img { max-width: 100%; max-height: 100%; } a { text-decoration: none; } a:hover { text-decoration: underline; } a:focus, input:focus, select:focus, textarea:focus { outline: 1px solid -webkit-focus-ring-color; outline-offset: -1px; } hr { border: 0; height: 2px; border-bottom: 2px solid; } h1 { padding-bottom: 0.3em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; } h1, h2, h3 { font-weight: normal; } h1 code, h2 code, h3 code, h4 code, h5 code, h6 code { font-size: inherit; line-height: auto; } table { border-collapse: collapse; } table > thead > tr > th { text-align: left; border-bottom: 1px solid; } table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td { padding: 5px 10px; } table > tbody > tr + tr > td { border-top: 1px solid; } blockquote { margin: 0 7px 0 5px; padding: 0 16px 0 10px; border-left-width: 5px; border-left-style: solid; } code { font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback"; font-size: 14px; line-height: 19px; } body.wordWrap pre { white-space: pre-wrap; } .mac code { font-size: 12px; line-height: 18px; } pre:not(.hljs), pre.hljs code > div { padding: 16px; border-radius: 3px; overflow: auto; } /** Theming */ pre code { color: var(--vscode-editor-foreground); } .vscode-light pre { background-color: rgba(220, 220, 220, 0.4); } .vscode-dark pre { background-color: rgba(10, 10, 10, 0.4); } .vscode-high-contrast pre { background-color: rgb(0, 0, 0); } .vscode-high-contrast h1 { border-color: rgb(0, 0, 0); } .vscode-light table > thead > tr > th { border-color: rgba(0, 0, 0, 0.69); } .vscode-dark table > thead > tr > th { border-color: rgba(255, 255, 255, 0.69); } .vscode-light h1, .vscode-light hr, .vscode-light table > tbody > tr + tr > td { border-color: rgba(0, 0, 0, 0.18); } .vscode-dark h1, .vscode-dark hr, .vscode-dark table > tbody > tr + tr > td { border-color: rgba(255, 255, 255, 0.18); } 
+</style>
+<style>
+/* https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs2015.css */ /* * Visual Studio 2015 dark style * Author: Nicolas LLOBERA <nllobera@gmail.com> */ .hljs-keyword, .hljs-literal, .hljs-symbol, .hljs-name { color: #569CD6; } .hljs-link { color: #569CD6; text-decoration: underline; } .hljs-built_in, .hljs-type { color: #4EC9B0; } .hljs-number, .hljs-class { color: #B8D7A3; } .hljs-string, .hljs-meta-string { color: #D69D85; } .hljs-regexp, .hljs-template-tag { color: #9A5334; } .hljs-subst, .hljs-function, .hljs-title, .hljs-params, .hljs-formula { color: #DCDCDC; } .hljs-comment, .hljs-quote { color: #57A64A; font-style: italic; } .hljs-doctag { color: #608B4E; } .hljs-meta, .hljs-meta-keyword, .hljs-tag { color: #9B9B9B; } .hljs-variable, .hljs-template-variable { color: #BD63C5; } .hljs-attr, .hljs-attribute, .hljs-builtin-name { color: #9CDCFE; } .hljs-section { color: gold; } .hljs-emphasis { font-style: italic; } .hljs-strong { font-weight: bold; } /*.hljs-code { font-family:'Monospace'; }*/ .hljs-bullet, .hljs-selector-tag, .hljs-selector-id, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo { color: #D7BA7D; } .hljs-addition { background-color: #144212; display: inline-block; width: 100%; } .hljs-deletion { background-color: #600; display: inline-block; width: 100%; } /* From https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs.css */ /* Visual Studio-like style based on original C# coloring by Jason Diamond <jason@diamond.name> */ .vscode-light .hljs-function, .vscode-light .hljs-params { color: inherit; } .vscode-light .hljs-comment, .vscode-light .hljs-quote, .vscode-light .hljs-variable { color: #008000; } .vscode-light .hljs-keyword, .vscode-light .hljs-selector-tag, .vscode-light .hljs-built_in, .vscode-light .hljs-name, .vscode-light .hljs-tag { color: #00f; } .vscode-light .hljs-string, .vscode-light .hljs-title, .vscode-light .hljs-section, .vscode-light .hljs-attribute, .vscode-light .hljs-literal, .vscode-light .hljs-template-tag, .vscode-light .hljs-template-variable, .vscode-light .hljs-type, .vscode-light .hljs-addition { color: #a31515; } .vscode-light .hljs-deletion, .vscode-light .hljs-selector-attr, .vscode-light .hljs-selector-pseudo, .vscode-light .hljs-meta { color: #2b91af; } .vscode-light .hljs-doctag { color: #808080; } .vscode-light .hljs-attr { color: #f00; } .vscode-light .hljs-symbol, .vscode-light .hljs-bullet, .vscode-light .hljs-link { color: #00b0e8; } .vscode-light .hljs-emphasis { font-style: italic; } .vscode-light .hljs-strong { font-weight: bold; }
+</style>
+<style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'HelveticaNeue-Light', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <h1 id="%E5%AE%9E%E9%AA%8C-2-4-%E9%93%B6%E8%A1%8C%E4%B8%9A%E5%8A%A1%E6%A8%A1%E6%8B%9F">实验 2-4: 银行业务模拟</h1>
+<h2 id="1-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0">1. 问题描述</h2>
+<p>客户业务分为两种：</p>
+<p>第一种是申请从银行得到一笔资金，即取款或借款；</p>
+<p>第二种是向银行投入一笔资金，即存款或还款。</p>
+<p>银行有两个服务窗口，相应地有两个队列。客户到达银行后先排第一个队，处理每个客户业务时，如果属于第一种，且申请额超出银行现存资金总额而得不到满足，则立刻排入第二个队等候直至满足时才离开银行;否则业务处理完后立刻离开银行,每接待完一个第二种业务的客户，则顺序检查和处理(如果可能)第二个队列中的客户，对能满足的申请者予以满足,不能满足者重新排到第二个队列的队尾。注意，在此检查过程中，一旦银行资金总额少于或等于刚才第一个队列中最后一个客户(第二种业务)被接待之前的数额，或者本次已将第二个队列检查或处理了一遍，就停止检查(因为此时已不可能还有能满足者)转而继续接待第一个队列的客户。任何时刻都只开一个窗口。假设检查不需要时间，营业时间结束时所有客户立即离开银行。</p>
+<p>写一个上述银行业务的事件驱动模拟系统，通过模拟方法求出客户在银行内逗留的平均时间。</p>
+<p><strong>输入要求:</strong>
+第一行输入三个数N、total、close_time、average_time，分别表示来银行的总人数、银行开始营业时拥有的款额、今天预计的营业时长和客户交易时长
+之后的N行每行输入两个数a、b，第一个数a为客户办理的款额，用负值和正值分别表示第一类和第二类业务。第二个数b为客户来到银行的时间</p>
+<p><strong>输出要求:</strong>
+前N行输出分别对应每个客户的等候时长
+第N+1行输出为客户等候平均时长，结果去尾法保留整数即可</p>
+<h2 id="2-%E7%AE%97%E6%B3%95%E7%9A%84%E6%8F%8F%E8%BF%B0">2. 算法的描述</h2>
+<h3 id="21-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E6%8F%8F%E8%BF%B0">2.1 数据结构的描述</h3>
+<p>本程序主要的数据结构是 队列(queue) ， 栈的实现和函数操作分别被定义在 <code>queue.c queue.h</code> 中，主函数在 <code>main.c</code> 中。</p>
+<p>对来银行的每个人，都定义了一个结构体 <code>aPerson</code>, 定义在 <code>queue.h</code> 中，对每个人，定义他们进入银行的时间 <code>time</code>, 通过减法得出他们的总等待时间。<code>main</code> 函数中，存在两个队列 <code>firstQueue</code> 和 <code>secondQueue</code> 分别表示队列 1 和队列 2. <code>process_time</code> 表示了当前正在被处理的人的处理时间，当达到 <code>average_time</code> 时，表示处理完成。<code>curr_time</code> 表示了现在的时间，若达到了 <code>close_time</code> 银行即关门，计算所有 <code>Queue</code> 中剩余的时间。</p>
+<p>每当存钱动作完成时，就会调用 <code>FindInQueue</code> 在第二个队列中查找是否有人符合条件可以存钱，若有，则开启第二个窗口，关闭第一个窗口。</p>
+<h3 id="22-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E7%9A%84%E6%8F%8F%E8%BF%B0">2.2 程序结构的描述</h3>
+<p><code>main.c</code> 中主要的函数有:</p>
+<ul>
+<li><code>main()</code> 处理银行的窗口操作</li>
+<li><code>FindInQueue()</code> 在 <code>Q</code> 中查找符合 <code>deps_money + total &gt;= 0</code> 的人。</li>
+</ul>
+<h2 id="3-%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90">3. 调试分析</h2>
+<p><strong>3.1:</strong> 在开始时，没有计算 当银行关闭时，尚未完成的人的时间，导致程序与答案不相符。</p>
+<p><strong>3.2:</strong> 在测试样例中，存在 <code>average_time</code> 为 0 的情形，之前未能处理好，于是使用如下方式进行调整：</p>
+<pre><code class="language-c"><div><span class="hljs-keyword">if</span>(average_time == <span class="hljs-number">0</span>) {
+    average_time = <span class="hljs-number">1</span>;
+    process_zero = <span class="hljs-number">1</span>;
+}
+</div></code></pre>
+<p>其中 <code>process_zero</code> 代表这是 <code>average_time = 0</code> 的情形</p>
+<p><strong>3.3:</strong> 使用 <code>DEBUG</code> 的 flag 对程序的各个地方进行输出，记录各个时段的情况，方便调试错误。</p>
+<h2 id="4-%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A%E5%92%8C%E6%94%B6%E8%8E%B7">4. 实验体会和收获</h2>
+<p>第二次实验使我熟悉了队列的栈的详细操作，并通过实际的样例和实验更熟悉了调试的方法和写出健壮程序的技巧。</p>
+
+    </body>
+    </html>

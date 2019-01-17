@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>实验 1: 线性表的应用：稀疏一元多项式运算器</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+        <style>
+/*--------------------------------------------------------------------------------------------- * Copyright (c) Microsoft Corporation. All rights reserved. * Licensed under the MIT License. See License.txt in the project root for license information. *--------------------------------------------------------------------------------------------*/ body { font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback"; font-size: 14px; padding: 0 26px; line-height: 22px; word-wrap: break-word; } #code-csp-warning { position: fixed; top: 0; right: 0; color: white; margin: 16px; text-align: center; font-size: 12px; font-family: sans-serif; background-color:#444444; cursor: pointer; padding: 6px; box-shadow: 1px 1px 1px rgba(0,0,0,.25); } #code-csp-warning:hover { text-decoration: none; background-color:#007acc; box-shadow: 2px 2px 2px rgba(0,0,0,.25); } body.scrollBeyondLastLine { margin-bottom: calc(100vh - 22px); } body.showEditorSelection .code-line { position: relative; } body.showEditorSelection .code-active-line:before, body.showEditorSelection .code-line:hover:before { content: ""; display: block; position: absolute; top: 0; left: -12px; height: 100%; } body.showEditorSelection li.code-active-line:before, body.showEditorSelection li.code-line:hover:before { left: -30px; } .vscode-light.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(0, 0, 0, 0.15); } .vscode-light.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(0, 0, 0, 0.40); } .vscode-light.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-dark.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 255, 255, 0.4); } .vscode-dark.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 255, 255, 0.60); } .vscode-dark.showEditorSelection .code-line .code-line:hover:before { border-left: none; } .vscode-high-contrast.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 160, 0, 0.7); } .vscode-high-contrast.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 160, 0, 1); } .vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before { border-left: none; } img { max-width: 100%; max-height: 100%; } a { text-decoration: none; } a:hover { text-decoration: underline; } a:focus, input:focus, select:focus, textarea:focus { outline: 1px solid -webkit-focus-ring-color; outline-offset: -1px; } hr { border: 0; height: 2px; border-bottom: 2px solid; } h1 { padding-bottom: 0.3em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; } h1, h2, h3 { font-weight: normal; } h1 code, h2 code, h3 code, h4 code, h5 code, h6 code { font-size: inherit; line-height: auto; } table { border-collapse: collapse; } table > thead > tr > th { text-align: left; border-bottom: 1px solid; } table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td { padding: 5px 10px; } table > tbody > tr + tr > td { border-top: 1px solid; } blockquote { margin: 0 7px 0 5px; padding: 0 16px 0 10px; border-left-width: 5px; border-left-style: solid; } code { font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback"; font-size: 14px; line-height: 19px; } body.wordWrap pre { white-space: pre-wrap; } .mac code { font-size: 12px; line-height: 18px; } pre:not(.hljs), pre.hljs code > div { padding: 16px; border-radius: 3px; overflow: auto; } /** Theming */ pre code { color: var(--vscode-editor-foreground); } .vscode-light pre { background-color: rgba(220, 220, 220, 0.4); } .vscode-dark pre { background-color: rgba(10, 10, 10, 0.4); } .vscode-high-contrast pre { background-color: rgb(0, 0, 0); } .vscode-high-contrast h1 { border-color: rgb(0, 0, 0); } .vscode-light table > thead > tr > th { border-color: rgba(0, 0, 0, 0.69); } .vscode-dark table > thead > tr > th { border-color: rgba(255, 255, 255, 0.69); } .vscode-light h1, .vscode-light hr, .vscode-light table > tbody > tr + tr > td { border-color: rgba(0, 0, 0, 0.18); } .vscode-dark h1, .vscode-dark hr, .vscode-dark table > tbody > tr + tr > td { border-color: rgba(255, 255, 255, 0.18); } 
+</style>
+<style>
+/* https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs2015.css */ /* * Visual Studio 2015 dark style * Author: Nicolas LLOBERA <nllobera@gmail.com> */ .hljs-keyword, .hljs-literal, .hljs-symbol, .hljs-name { color: #569CD6; } .hljs-link { color: #569CD6; text-decoration: underline; } .hljs-built_in, .hljs-type { color: #4EC9B0; } .hljs-number, .hljs-class { color: #B8D7A3; } .hljs-string, .hljs-meta-string { color: #D69D85; } .hljs-regexp, .hljs-template-tag { color: #9A5334; } .hljs-subst, .hljs-function, .hljs-title, .hljs-params, .hljs-formula { color: #DCDCDC; } .hljs-comment, .hljs-quote { color: #57A64A; font-style: italic; } .hljs-doctag { color: #608B4E; } .hljs-meta, .hljs-meta-keyword, .hljs-tag { color: #9B9B9B; } .hljs-variable, .hljs-template-variable { color: #BD63C5; } .hljs-attr, .hljs-attribute, .hljs-builtin-name { color: #9CDCFE; } .hljs-section { color: gold; } .hljs-emphasis { font-style: italic; } .hljs-strong { font-weight: bold; } /*.hljs-code { font-family:'Monospace'; }*/ .hljs-bullet, .hljs-selector-tag, .hljs-selector-id, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo { color: #D7BA7D; } .hljs-addition { background-color: #144212; display: inline-block; width: 100%; } .hljs-deletion { background-color: #600; display: inline-block; width: 100%; } /* From https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs.css */ /* Visual Studio-like style based on original C# coloring by Jason Diamond <jason@diamond.name> */ .vscode-light .hljs-function, .vscode-light .hljs-params { color: inherit; } .vscode-light .hljs-comment, .vscode-light .hljs-quote, .vscode-light .hljs-variable { color: #008000; } .vscode-light .hljs-keyword, .vscode-light .hljs-selector-tag, .vscode-light .hljs-built_in, .vscode-light .hljs-name, .vscode-light .hljs-tag { color: #00f; } .vscode-light .hljs-string, .vscode-light .hljs-title, .vscode-light .hljs-section, .vscode-light .hljs-attribute, .vscode-light .hljs-literal, .vscode-light .hljs-template-tag, .vscode-light .hljs-template-variable, .vscode-light .hljs-type, .vscode-light .hljs-addition { color: #a31515; } .vscode-light .hljs-deletion, .vscode-light .hljs-selector-attr, .vscode-light .hljs-selector-pseudo, .vscode-light .hljs-meta { color: #2b91af; } .vscode-light .hljs-doctag { color: #808080; } .vscode-light .hljs-attr { color: #f00; } .vscode-light .hljs-symbol, .vscode-light .hljs-bullet, .vscode-light .hljs-link { color: #00b0e8; } .vscode-light .hljs-emphasis { font-style: italic; } .vscode-light .hljs-strong { font-weight: bold; }
+</style>
+<style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'HelveticaNeue-Light', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <h1 id="%E5%AE%9E%E9%AA%8C-1-%E7%BA%BF%E6%80%A7%E8%A1%A8%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%80%E7%96%8F%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E8%BF%90%E7%AE%97%E5%99%A8">实验 1: 线性表的应用：稀疏一元多项式运算器</h1>
+<h2 id="11-%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0">1.1 问题描述</h2>
+<p>通过程序实现一元多项式多种运算，包括：</p>
+<p><strong>1.1 输入并创建多项式</strong>
+期望以 <code>ax^b</code> 的形式输入多项式
+<strong>1.2 输出多项式</strong>
+以降幂的格式输出所有多项式
+<strong>1.3 多项式求和</strong>
+选定两个多项式并求和，输出求和后的多项式
+<strong>1.4 多项式求差</strong>
+选定两个多项式并求差，输出求差后的多项式
+<strong>1.5 多项式求值</strong>
+对指定的多项式和用户给定的 <code>x</code>, 求 <code>f(x)</code>
+<strong>1.6 多项式销毁</strong>
+销毁用户确定的多项式，清除空间。
+<strong>1.7 多项式清空</strong>
+讲选定的多项式清楚为 <code>0</code>
+<strong>1.8 多项式修改</strong>
+1). 搜索指定多项式中的某一项, 并修改它
+2). 删除某一项
+3). 向多项式中插入一个新项
+<strong>1.9 多项式微分</strong>
+选定多项式，求 <code>f'(x)</code>
+<strong>1.10 多项式不定积分</strong>
+选定多项式，求它的不定积分并输出
+<strong>1.11 多项式定积分</strong>
+选定多项式，求其定积分，并输出
+<strong>1.12 多项式乘法和乘方</strong>
+选定两个多项式，进行乘法/选定 1 个多项式，进行乘方操作，输出结果
+<strong>1.13 多项式除法</strong>
+选定两个多项式并相除，输出结果
+<strong>1.14 多项式四则运算</strong>
+输入以序号标注的多项式的运算，输出结果</p>
+<h2 id="2-%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0">2. 算法描述</h2>
+<h3 id="21-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%8F%8F%E8%BF%B0">2.1 数据结构描述</h3>
+<p>本实验通过链表实现几乎所有的操作，链表的定义位于 <code>include/main.h</code>, 所有的多项式被串在链表中，每一个多项式的存储也由链表实现。
+在四则运算时使用了栈的操作，定义在 <code>include/stack.h</code></p>
+<p>本实验中所用的 <strong>主要</strong> 函数声明在 <code>include/main.h</code> 中，辅助的函数声明位于 <code>include/assistant.h</code> 中，<code>include/common.h</code> 中声明了一些通用的函数, 程序从用户输入读取选项后，通过 <code>DoOperation</code> 函数中的 <code>case</code> 调用对应的函数。</p>
+<h3 id="22-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E7%9A%84%E6%8F%8F%E8%BF%B0">2.2 程序结构的描述</h3>
+<p>实现不同的功能，本程序使用了不同的函数。</p>
+<p><strong>2.2.1 输入并创建多项式</strong> 程序首先调用 <code>MakePoly()</code> 函数，<code>MakePoly()</code> 函数从用户输入读取相应的多项式，并调用 <code>ProcessStr()</code> 对输入的多项式进行切割，调用 <code>ProcessExpr()</code> 对单个表达式进行处理，最后通过 <code>InsertNode()</code> 找到对应的节点将 Node 添加到链表当中。</p>
+<p><strong>2.2.2 输出多项式</strong> 程序调用 <code>ShowList()</code> 函数，<code>ShowList()</code> 调用 <code>PrintPoly()</code> 输出每一个多项式。</p>
+<p><strong>2.2.3 多项式求和 多项式求差</strong> 程序都调用了 <code>DisAndCall()</code> 函数，传入了对应的函数指针 <code>AddPoly</code> <code>SubPoly</code>, <code>DisAndCall()</code> 调用 <code>ShowList()</code> 输出所有可以被操作的多项式并请用户选择，最后使用对应的函数 <code>AddPoly</code> 或 <code>SubPoly</code> 完成相应的功能。</p>
+<p><strong>2.2.4 求 f(x)</strong> 程序调用 <code>SolvePoly()</code> 请求被操作的函数和 <code>x</code>，随后进行对应的操作。</p>
+<p><strong>2.2.5 多项式销毁</strong> 调用 <code>DelPoly()</code> 对对应多项式进行 <code>free()</code> 操作</p>
+<p><strong>2.2.6 多项式清空</strong> 调用 <code>EmptyPoly()</code> 对多项式置 0.</p>
+<p><strong>2.2.7 多项式修改</strong> 调用 <code>ChangePoly()</code> 后使用 <code>case</code> 处理请求，分别调用 <code>change_insert_node()</code> <code>change_delete_node()</code> <code>change_change_node()</code> 进行不同的修改，最后使用 <code>PrintPoly()</code> 输出函数</p>
+<p><strong>2.2.8 多项式微分</strong> 调用 <code>PolyDiF()</code>，调用 <code>poly_dif()</code> 对多项式进行实际的微分操作，并输出多项式，最后询问是否把多项式存入。并不需要考虑 <code>ln</code> 出现的情形。</p>
+<p><strong>2.2.9 多项式不定积分</strong> 调用 <code>PolyInfI()</code>，调用 <code>poly_infi()</code> 进行实际积分操作，最后询问是否存入。需要考虑 <code>x^-1</code> 情形，方法是在头中定义变量 <code>coffLn</code> 存储 <code>Ln</code> 之前的系数。</p>
+<p><strong>2.2.10 多项式定积分</strong> 调用 <code>PolyDefI()</code>, 直接调用 <strong>poly_infi()</strong> 进行不定积分，随后进行求值并输出结果，考虑出现 <code>Ln</code> 时 <code>x</code> 不能小于0.</p>
+<p><strong>2.2.11 多项式乘法和乘方</strong> 乘法调用 <code>DisAndCall()</code> 传入 <code>PolyMultip()</code> 的函数指针，乘方调用 <code>PolyPow()</code> 并在其中调用 <code>PolyMultip()</code></p>
+<p><strong>2.2.12 多项式除法</strong> 调用 <code>DisAndCall(PolyDiv, head)</code>, 传入函数指针 <code>PolyDiv()</code>, <code>PolyDiv()</code> 调用递归的函数 <code>do_div()</code> 对两个函数递归地相除。</p>
+<p><strong>2.2.13 多项式四则运算</strong> 调用 <code>PolyExpr()</code>, 使用栈的操作存储元素并进行对应的运算。</p>
+<h2 id="3-%E8%B0%83%E8%AF%95%E5%88%86%E6%9E%90">3. 调试分析</h2>
+<p>使用 <code>gdb</code> 对每个功能进行调试，主要是对 <code>x^-1</code> 的定积分处理，多项式的除法和对 <code>ln</code> 的不定积分 <code>x</code> 的定义域。</p>
+<h2 id="4-%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A%E5%92%8C%E6%94%B6%E8%8E%B7">4. 实验体会和收获</h2>
+<p>这次实验写了很多的函数来实现一些错综复杂的功能，写出了较为完成且可调试的程序。</p>
+
+    </body>
+    </html>
